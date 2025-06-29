@@ -1,0 +1,97 @@
+﻿@page
+@using ArtGallery.Domain
+@model IndexModel
+
+@{
+    ViewData["Title"] = "Home page";
+}
+
+@section Styles {
+    
+}
+
+<h3>Art</h3>
+
+<section class="artitems">
+    <ol>
+        @for (int i = 0; i < Model.ArtItems.Count; i++) {
+            ArtItem art = Model.ArtItems[i];
+            <li>
+                <article class="artitem">
+                    <img
+                        src="@art.Url"
+                        alt="Art drawn by @art.Artist.Name in @art.Date.Year: @art.Title"
+                        onclick="openFullscreenView(@i)"/>
+                    <figure>
+                        <figcaption>
+                            <time>@art.Date.ToString("O")</time> @art.Artist.Name<br/>
+                            @art.Title
+                        </figcaption>
+                    </figure>
+                </article>
+            </li>
+        }
+    </ol>
+</section>
+
+<div id="fullscreenview" class="closed fullyClosed" onclick="closeFullscreenView(event)">
+    <figure>
+        <img
+            id="fsv_img"
+            src=""
+            alt=""/>
+        <figcaption>
+            <h4 id="fsv_title"></h4>
+            <p>Drawn on <time id="fsv_date" datetime=""></time> by <span id="fsv_artistname"></span></p>
+            <p id="fsv_desc"></p>
+        </figcaption>
+    </figure>
+</div>
+
+@section Scripts {
+    <script>
+        const artItems = @Json.Serialize(@Model.ArtItems);
+        let closeTimeout;
+    
+        function openFullscreenView(artItemIndex) {
+            if (closeTimeout) {
+                clearTimeout(closeTimeout);
+            }
+            
+            const artItem = artItems[artItemIndex];
+            const fullscreenView = document.querySelector("#fullscreenview");
+
+            fullscreenView.classList.remove("fullyClosed");
+            fullscreenView.classList.remove("closed");
+            fullscreenView.classList.add("open");
+            
+            const img = document.querySelector("#fsv_img");
+            const title = document.querySelector("#fsv_title");
+            const desc = document.querySelector("#fsv_desc");
+            const artistname = document.querySelector("#fsv_artistname");
+            const date = document.querySelector("#fsv_date");
+            
+            const artDate = new Date(artItem.date);
+            img.setAttribute("src", artItem.url);
+            img.setAttribute("alt", `Art drawn by ${artItem.artist.name} in ${artDate.getFullYear()}: ${artItem.title}`);
+            title.innerText = artItem.title;
+            desc.innerText = artItem.description;
+            artistname.innerText = artItem.artist.name;
+            date.setAttribute("datetime", artDate.toISOString());
+            date.innerText = artDate.toLocaleDateString();
+        }
+        
+        function closeFullscreenView(event) {
+            console.log(event);
+            const fullscreenView = document.querySelector("#fullscreenview");
+
+            fullscreenView.classList.add("closed");
+            fullscreenView.classList.remove("open");
+
+            closeTimeout = setTimeout(() => {
+                fullscreenView.classList.add("fullyClosed");
+                closeTimeout = null;
+            }, 300);
+        }
+    </script>
+}
