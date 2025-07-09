@@ -7,8 +7,3 @@ public class ArtItem {
 	public string Url { get; set; }
 	public Artist Artist { get; set; }
 }
-
-public class Artist {
-	public string Name { get; set; }
-	public ICollection<ArtItem> ArtItems { get; set; }
-}

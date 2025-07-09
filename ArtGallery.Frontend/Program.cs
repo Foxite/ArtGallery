@@ -5,7 +5,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 
-builder.Services.AddSingleton<IArtRepository, TestArtRepository>();
+//builder.Services.AddSingleton<IArtRepository, TestArtRepository>();
+builder.Services.AddSingleton<IArtRepository, FilesystemArtRepository>();
+builder.Services.Configure<FilesystemArtRepository.Options>(builder.Configuration.GetSection("FilesystemArtRepository"));
 
 var app = builder.Build();
 

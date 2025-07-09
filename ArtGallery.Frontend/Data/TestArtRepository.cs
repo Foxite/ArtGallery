@@ -2,12 +2,7 @@ using ArtGallery.Domain;
 
 namespace ArtGallery.Data;
 
-public interface IArtRepository {
-	Task<ICollection<ArtItem>> GetAllArtItems(DateOnly? min, DateOnly? max);
-	Task<ICollection<ArtItem>?> GetAllArtItems(string artistName);
-}
-
-public class TestArtRepository : IArtRepository {
+public class TestArtRepository : InMemoryArtRepository {
 	private List<Artist> _artists = new() {
 		new Artist() {
 			Name = "Impareon",
@@ -67,24 +62,5 @@ public class TestArtRepository : IArtRepository {
 		}
 	}
 
-	public Task<ICollection<ArtItem>> GetAllArtItems(DateOnly? min, DateOnly? max) {
-		IEnumerable<ArtItem> result = _artists.SelectMany(artist => artist.ArtItems);
-		if (min.HasValue) {
-			result = result.Where(item => item.Date > min.Value);
-		}
-		if (max.HasValue) {
-			result = result.Where(item => item.Date < max.Value);
-		}
-
-		return Task.FromResult<ICollection<ArtItem>>(result.ToList());
-	}
-	
-	public Task<ICollection<ArtItem>?> GetAllArtItems(string artistName) {
-		Artist? artist = _artists.Find(artist => artist.Name == artistName);
-		if (artist == null) {
-			return Task.FromResult<ICollection<ArtItem>?>(null);
-		}
-
-		return Task.FromResult<ICollection<ArtItem>?>(artist.ArtItems);
-	}
+	protected override ICollection<Artist> GetArtItems() => _artists;
 }
