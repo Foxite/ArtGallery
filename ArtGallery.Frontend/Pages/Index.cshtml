@@ -26,27 +26,27 @@
                     }
                 </ul>
             }
+            <ol>
+                @foreach (var art in artist.ArtItems) {
+                    <li>
+                        <article class="artitem" data-artitem="@JsonConvert.SerializeObject(art, new JsonSerializerSettings() { ContractResolver = new CamelCasePropertyNamesContractResolver() })">
+                            <img
+                                loading="lazy"
+                                src="@art.Path"
+                                alt="Art drawn by @art.Artist.Name in @art.Date.Year: @art.Title"
+                                onclick="openFullscreenView(this)"/>
+                            <figure>
+                                <figcaption>
+                                    <time>@art.Date.ToString("O")</time><br/>
+                                    @art.Title
+                                </figcaption>
+                            </figure>
+                        </article>
+                    </li>
+                }
+                @{ i++; }
+            </ol>
         </section>
-        <ol>
-            @foreach (var art in artist.ArtItems) {
-                <li>
-                    <article class="artitem" data-artitem="@JsonConvert.SerializeObject(@art, new JsonSerializerSettings() { ContractResolver = new CamelCasePropertyNamesContractResolver() })">
-                        <img
-                            loading="lazy"
-                            src="@art.Path"
-                            alt="Art drawn by @art.Artist.Name in @art.Date.Year: @art.Title"
-                            onclick="openFullscreenView(this)"/>
-                        <figure>
-                            <figcaption>
-                                <time>@art.Date.ToString("O")</time><br/>
-                                @art.Title
-                            </figcaption>
-                        </figure>
-                    </article>
-                </li>
-            }
-            @{ i++; }
-        </ol>
     }
 </main>
 
