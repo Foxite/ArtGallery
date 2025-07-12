@@ -1,23 +1,18 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER $APP_UID
-WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
-
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+﻿FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["ArtGallery/ArtGallery.csproj", "ArtGallery/"]
-RUN dotnet restore "ArtGallery/ArtGallery.csproj"
+
+COPY ["ArtGallery.Frontend/ArtGallery.Frontend.csproj", "ArtGallery.Frontend/ArtGallery.Frontend.csproj"]
+COPY ["ArtGallery.Common/ArtGallery.Common.csproj", "ArtGallery.Common/ArtGallery.Common.csproj"]
+RUN dotnet restore "ArtGallery.Frontend/ArtGallery.Frontend.csproj"
 COPY . .
-WORKDIR "/src/ArtGallery"
-RUN dotnet build "ArtGallery.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/ArtGallery.Frontend"
+RUN dotnet build "ArtGallery.Frontend.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet publish "ArtGallery.Frontend.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "ArtGallery.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
-
-FROM base AS final
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+EXPOSE 8080
 WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "ArtGallery.dll"]
+COPY --from=build /app/publish .
+USER $APP_UID
+CMD ["dotnet", "ArtGallery.Frontend.dll"]

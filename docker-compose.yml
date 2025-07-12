@@ -1,6 +1,0 @@
-﻿services:
-  artgallery:
-    image: artgallery
-    build:
-      context: .
-      dockerfile: ArtGallery/Dockerfile
