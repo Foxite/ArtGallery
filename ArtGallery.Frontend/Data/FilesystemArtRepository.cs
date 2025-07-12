@@ -1,23 +1,28 @@
 using ArtGallery.Domain;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 
 namespace ArtGallery.Data;
 
-public class FilesystemArtRepository : IArtRepository {
-	private readonly IOptions<Options> _options;
-	private readonly ILogger<FilesystemArtRepository> _logger;
+public class FilesystemArtRepository(IOptions<FilesystemArtRepository.Options> options) : InMemoryArtRepository {
+	protected override ArtCollection GetArtItems() {
+		var result = JsonConvert.DeserializeObject<ArtCollection>(File.ReadAllText(options.Value.JsonFilePath)) ?? throw new Exception("Unable to deserialize art file into List<Artist>");
 
-	public FilesystemArtRepository(IOptions<Options> options, ILogger<FilesystemArtRepository> logger) {
-		_options = options;
-		_logger = logger;
+		foreach (Artist artist in result.Artists) {
+			foreach (ArtItem artItem in artist.ArtItems) {
+				artItem.Path = MapPathToUrl(artItem.Path);
+			}
+		}
+
+		return result;
 	}
 
 	private string MapPathToUrl(string path) {
-		// TODO
-		return path;
+		return Path.Combine(options.Value.BaseUrl, path);
 	}
 
 	public class Options {
-		public string Path { get; set; }
+		public string JsonFilePath { get; set; }
+		public string BaseUrl { get; set; }
 	}
 }

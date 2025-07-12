@@ -3,26 +3,33 @@ using ArtGallery.Domain;
 namespace ArtGallery.Data;
 
 public abstract class InMemoryArtRepository : IArtRepository {
-	protected abstract ICollection<Artist> GetArtItems();
+	protected abstract ArtCollection GetArtItems();
 
-	public Task<ICollection<ArtItem>> GetAllArtItems(DateOnly? min, DateOnly? max) {
-		IEnumerable<ArtItem> result = GetArtItems().SelectMany(artist => artist.ArtItems);
-		if (min.HasValue) {
-			result = result.Where(item => item.Date > min.Value);
-		}
-		if (max.HasValue) {
-			result = result.Where(item => item.Date < max.Value);
-		}
+	public Task<ArtCollection> GetAllArtItems(DateOnly? min, DateOnly? max, string? artistName) {
+		var artCollection = GetArtItems();
 
-		return Task.FromResult<ICollection<ArtItem>>(result.ToList());
-	}
-	
-	public Task<ICollection<ArtItem>?> GetAllArtItems(string artistName) {
-		Artist? artist = GetArtItems().FirstOrDefault(artist => artist.Name == artistName);
-		if (artist == null) {
-			return Task.FromResult<ICollection<ArtItem>?>(null);
+		if (artistName != null) {
+			artCollection.Artists = artCollection.Artists.Where(artist => artist.Name == artistName).ToList();
 		}
+		
+		foreach (var artist in artCollection.Artists) {
+			var artItems = artist.ArtItems.AsEnumerable();
+			
+			if (min.HasValue) {
+				artItems = artItems.Where(ai => ai.Date >= min.Value);
+			}
 
-		return Task.FromResult<ICollection<ArtItem>?>(artist.ArtItems);
+			if (max.HasValue) {
+				artItems = artItems.Where(ai => ai.Date < max.Value);
+			}
+
+			artist.ArtItems = artItems.ToList();
+			
+			foreach (ArtItem artItem in artist.ArtItems) {
+				artItem.Artist = artist;
+			}
+		}
+		
+		return Task.FromResult(artCollection);
 	}
 }

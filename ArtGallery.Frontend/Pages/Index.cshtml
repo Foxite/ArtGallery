@@ -1,5 +1,7 @@
 ﻿@page
 @using ArtGallery.Domain
+@using Newtonsoft.Json
+@using Newtonsoft.Json.Serialization
 @model IndexModel
 
 @{
@@ -10,55 +12,80 @@
     
 }
 
-<h3>Art</h3>
-
-<section class="artitems">
-    <ol>
-        @for (int i = 0; i < Model.ArtItems.Count; i++) {
-            ArtItem art = Model.ArtItems[i];
-            <li>
-                <article class="artitem">
-                    <img
-                        src="@art.Url"
-                        alt="Art drawn by @art.Artist.Name in @art.Date.Year: @art.Title"
-                        onclick="openFullscreenView(@i)"/>
-                    <figure>
-                        <figcaption>
-                            <time>@art.Date.ToString("O")</time> @art.Artist.Name<br/>
-                            @art.Title
-                        </figcaption>
-                    </figure>
-                </article>
-            </li>
-        }
-    </ol>
-</section>
+<main class="artitems">
+    @{ int i = 0; }
+    @foreach (var artist in Model.ArtCollection.Artists) {
+        <section>
+            <h3>@artist.Name</h3>
+            @if (artist.Socials != null) {
+                <ul>
+                    @foreach (ArtistSocial social in artist.Socials) {
+                        <li>
+                            <img
+                                class="socialicon"
+                                alt="@social.Type"
+                                src="@Model.GetSocialIcon(social)" />
+                            <a href="@social.Url">@social.Url</a>
+                        </li>
+                    }
+                </ul>
+            }
+    </section>
+        <ol>
+            @foreach (var art in artist.ArtItems) {
+                <li>
+                    <article class="artitem">
+                        <img
+                            src="@art.Path"
+                            alt="Art drawn by @art.Artist.Name in @art.Date.Year: @art.Title"
+                            onclick="openFullscreenView(@JsonConvert.SerializeObject(@art, new JsonSerializerSettings() { ContractResolver = new CamelCasePropertyNamesContractResolver() }))"/>
+                        <figure>
+                            <figcaption>
+                                <time>@art.Date.ToString("O")</time><br/>
+                                @art.Title
+                            </figcaption>
+                        </figure>
+                    </article>
+                </li>
+            }
+            @{ i++; }
+        </ol>
+    }
+</main>
 
 <div id="fullscreenview" class="closed fullyClosed" onclick="closeFullscreenView(event)">
-    <figure>
-        <img
-            id="fsv_img"
-            src=""
-            alt=""/>
-        <figcaption>
-            <h4 id="fsv_title"></h4>
-            <p>Drawn on <time id="fsv_date" datetime=""></time> by <span id="fsv_artistname"></span></p>
-            <p id="fsv_desc"></p>
-        </figcaption>
-    </figure>
+    <div id="fsv_center">
+        <figure>
+            <img
+                id="fsv_img"
+                src=""
+                alt=""/>
+            <figcaption>
+                <h4 id="fsv_title"></h4>
+                <p>Drawn on <time id="fsv_date" datetime=""></time> by <span id="fsv_artistname"></span></p>
+                <p id="fsv_desc"></p>
+            </figcaption>
+        </figure>
+    </div>
 </div>
 
 @section Scripts {
     <script>
-        const artItems = @Json.Serialize(@Model.ArtItems);
+        document.addEventListener("keydown", function (evt) {
+            const escapeKeyCode = 27;
+            if (evt.keyCode === escapeKeyCode) {
+                closeFullscreenView();
+            }
+        });
+        
         let closeTimeout;
-    
-        function openFullscreenView(artItemIndex) {
+        
+        function openFullscreenView(artItem) {
             if (closeTimeout) {
                 clearTimeout(closeTimeout);
             }
             
-            const artItem = artItems[artItemIndex];
+            console.log(artItem);
             const fullscreenView = document.querySelector("#fullscreenview");
 
             fullscreenView.classList.remove("fullyClosed");
@@ -72,7 +99,7 @@
             const date = document.querySelector("#fsv_date");
             
             const artDate = new Date(artItem.date);
-            img.setAttribute("src", artItem.url);
+            img.setAttribute("src", artItem.path);
             img.setAttribute("alt", `Art drawn by ${artItem.artist.name} in ${artDate.getFullYear()}: ${artItem.title}`);
             title.innerText = artItem.title;
             desc.innerText = artItem.description;
@@ -81,8 +108,7 @@
             date.innerText = artDate.toLocaleDateString();
         }
         
-        function closeFullscreenView(event) {
-            console.log(event);
+        function closeFullscreenView() {
             const fullscreenView = document.querySelector("#fullscreenview");
 
             fullscreenView.classList.add("closed");

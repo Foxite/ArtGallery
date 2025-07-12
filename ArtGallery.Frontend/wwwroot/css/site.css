@@ -18,7 +18,7 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+  margin: 3em;
 }
 
 
@@ -45,16 +45,11 @@ body {
   width: 15em;
 }
 
-.artitem {
-  /*border: 1px solid red;*/
-}
-
 .artitem figcaption {
   text-align: center;
 }
 
 .artitem > img {
-  border: 2px solid slategray;
   border-radius: 2px;
 
   height: 15em;
@@ -74,8 +69,9 @@ body {
   color: white;
   
   display: flex;
+  align-items: center;
+  justify-content: center;
   flex-direction: row;
-  justify-content: space-evenly;
   padding-top: 2em;
 
   transition: background-color 0.3s;
@@ -91,6 +87,10 @@ body {
 
 #fullscreenview.fullyClosed {
   visibility: hidden;
+}
+
+#fullscreenview #fsv_center {
+  
 }
 
 #fullscreenview figure {
@@ -115,4 +115,8 @@ body {
   max-width: 90vw;
   max-height: 70vh;
   object-fit: contain;
+}
+
+.socialicon {
+  height: 1em;
 }
