@@ -11,9 +11,9 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
   BUILD_CONTEXT: .
-  DOCKERFILE: VoiceIdleBot/Dockerfile
+  DOCKERFILE: ArtGallery.Frontend/Dockerfile
   GLUE_KEY_ALG: ES512
-  GLUE_KEY_ID: voiceidlebot
+  GLUE_KEY_ID: artgallery
 
 jobs:
   build-and-push-image:
