@@ -8,11 +8,7 @@
     ViewData["Title"] = "Home page";
 }
 
-@section Styles {
-    
-}
-
-<main class="artitems">
+<main class="artitems" role="main">
     @{ int i = 0; }
     @foreach (var artist in Model.ArtCollection.Artists) {
         <section>
@@ -30,15 +26,16 @@
                     }
                 </ul>
             }
-    </section>
+        </section>
         <ol>
             @foreach (var art in artist.ArtItems) {
                 <li>
-                    <article class="artitem">
+                    <article class="artitem" data-artitem="@JsonConvert.SerializeObject(@art, new JsonSerializerSettings() { ContractResolver = new CamelCasePropertyNamesContractResolver() })">
                         <img
+                            loading="lazy"
                             src="@art.Path"
                             alt="Art drawn by @art.Artist.Name in @art.Date.Year: @art.Title"
-                            onclick="openFullscreenView(@JsonConvert.SerializeObject(@art, new JsonSerializerSettings() { ContractResolver = new CamelCasePropertyNamesContractResolver() }))"/>
+                            onclick="openFullscreenView(this)"/>
                         <figure>
                             <figcaption>
                                 <time>@art.Date.ToString("O")</time><br/>
@@ -53,7 +50,7 @@
     }
 </main>
 
-<div id="fullscreenview" class="closed fullyClosed" onclick="closeFullscreenView(event)">
+<div id="fullscreenview" class="closed fullyClosed" onclick="closeFullscreenView()">
     <div id="fsv_center">
         <figure>
             <img
@@ -80,12 +77,13 @@
         
         let closeTimeout;
         
-        function openFullscreenView(artItem) {
+        function openFullscreenView(artItemImg) {
             if (closeTimeout) {
                 clearTimeout(closeTimeout);
             }
             
-            console.log(artItem);
+            const artItem = JSON.parse(artItemImg.parentElement.getAttribute("data-artitem"));
+
             const fullscreenView = document.querySelector("#fullscreenview");
 
             fullscreenView.classList.remove("fullyClosed");

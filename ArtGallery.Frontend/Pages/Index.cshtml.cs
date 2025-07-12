@@ -26,23 +26,32 @@ public class IndexModel : PageModel {
 	}
 	public string GetSocialIcon(ArtistSocial social) {
 		return social.Type switch {
-			"Bluesky"     => "/img/social/bsky.png",
+			"Artfight"    => "/img/social/artfight.png",
+			"Bluesky"     => "/img/social/bluesky.svg",
+			"Bsky"        => "/img/social/bluesky.svg",
 			"Carrd"       => "/img/social/carrd.png",
 			"Furaffinity" => "/img/social/furaffinity.png",
+			"Instagram"   => "/img/social/instagram.png",
 			"Kofi"        => "/img/social/kofi.png",
-			"Ko-fi"       => "/img/social/kofi.png",
-			"Linktree"    => "/img/social/linktree.png",
-			"Mastodon"    => "/img/social/mastodon.png",
+			"Linktree"    => "/img/social/linktree.svg",
+			"Mastodon"    => "/img/social/mastodon.svg",
+			"Neocities"   => "/img/social/neocities.svg",
 			"Newgrounds"  => "/img/social/newgrounds.png",
 			"Patreon"     => "/img/social/patreon.png",
 			"Reddit"      => "/img/social/reddit.png",
 			"Strawpage"   => "/img/social/strawpage.png",
-			"Tumblr"      => "/img/social/tumblr.png",
+			"Spacehey"    => "/img/social/spacehey.svg",
+			"TikTok"      => "/img/social/tiktok.svg",
+			"Toyhouse"    => "/img/social/toyhouse.svg",
+			"Trello"      => "/img/social/trello.svg",
+			"Tumblr"      => "/img/social/tumblr.svg",
 			"Twitch"      => "/img/social/twitch.png",
 			"Twitter"     => "/img/social/twitter.png",
+			"VGen"        => "/img/social/vgen.png",
 			"X"           => "/img/social/twitter.png",
 			"Youtube"     => "/img/social/youtube.png",
 			_             => "/img/social/generic.svg",
+			
 		};
 	}
 }
