@@ -5,7 +5,7 @@
 @model IndexModel
 
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = Model.PageOptions.Value.Title;
 }
 
 <main role="main">

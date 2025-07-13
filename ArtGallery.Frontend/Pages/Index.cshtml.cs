@@ -1,6 +1,8 @@
 using ArtGallery.Data;
 using ArtGallery.Domain;
+using ArtGallery.Frontend.Options;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Options;
 
 namespace ArtGallery.Pages;
 
@@ -8,9 +10,11 @@ public class IndexModel : PageModel {
 	private readonly IArtRepository _artRepository;
 	
 	public ArtCollection ArtCollection { get; private set; }
+	public IOptions<PageOptions> PageOptions { get; }
 
-	public IndexModel(ILogger<IndexModel> logger, IArtRepository artRepository) {
+	public IndexModel(ILogger<IndexModel> logger, IArtRepository artRepository, IOptions<PageOptions> pageOptions) {
 		_artRepository = artRepository;
+		PageOptions = pageOptions;
 	}
 
 	public async Task OnGet() {
