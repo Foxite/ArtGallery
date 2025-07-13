@@ -3,7 +3,6 @@
 // TODO layout design
 // TODO next/previous in FSV
 // TODO fix clicking on text in FSV closes it
-// TODO link to specific item; scroll anchor to that item and open FSV
 // TODO thumbnail generation
 // TODO explicit dark mode colors?
 

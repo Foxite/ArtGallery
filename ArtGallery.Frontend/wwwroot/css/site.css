@@ -43,6 +43,10 @@ footer {
   right: 0;
 }
 
+#fullscreenview.open ~ .nsfw-warning-container {
+  backdrop-filter: blur(50px);
+}
+
 
 
 

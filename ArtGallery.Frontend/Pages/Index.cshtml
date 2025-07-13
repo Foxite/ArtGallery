@@ -1,4 +1,5 @@
 ﻿@page
+@using System.Text.Encodings.Web
 @using ArtGallery.Domain
 @using Newtonsoft.Json
 @using Newtonsoft.Json.Serialization
@@ -6,16 +7,6 @@
 
 @{
     ViewData["Title"] = Model.PageOptions.Value.Title;
-}
-
-@if (Model.ShowNsfwWarning) {
-    <div class="nsfw-warning-container">
-        <dialog class="nsfw-warning" closedby="none" open>
-            Please note that images on this page are <strong>not safe for work</strong>
-            and should only be viewed by those 18+.<br/>
-            <button onclick="closeNsfwWarning(this)">Continue</button>
-        </dialog>
-    </div>
 }
 
 <main role="main">
@@ -39,7 +30,10 @@
             <ol>
                 @foreach (var art in artist.ArtItems) {
                     <li>
-                        <article class="artitem" data-artitem="@JsonConvert.SerializeObject(art, new JsonSerializerSettings() { ContractResolver = new CamelCasePropertyNamesContractResolver() })">
+                        <article
+                            id="@art.JumpHash"
+                            class="artitem"
+                            data-artitem="@JsonConvert.SerializeObject(art, new JsonSerializerSettings() { ContractResolver = new CamelCasePropertyNamesContractResolver(), NullValueHandling = NullValueHandling.Ignore })">
                             <img
                                 loading="lazy"
                                 src="@art.Path"
@@ -76,8 +70,26 @@
     </div>
 </div>
 
+@if (Model.ShowNsfwWarning) {
+    <div class="nsfw-warning-container">
+        <dialog class="nsfw-warning" closedby="none" open>
+            Please note that images on this page are <strong>not safe for work</strong>
+            and should only be viewed by those 18+.<br/>
+            <button onclick="closeNsfwWarning(this)">Continue</button>
+        </dialog>
+    </div>
+}
+
 @section Scripts {
     <script>
+        document.addEventListener("DOMContentLoaded", function (evt) {
+            console.log(window.location.hash);
+            if (window.location.hash.startsWith("#art")) {
+                const artItemImg = document.querySelector(`[id="${decodeURIComponent(window.location.hash.substring(1)).replaceAll(`"`, `\\"`)}"] > img`);
+                openFullscreenView(artItemImg);
+            }
+        });
+        
         document.addEventListener("keydown", function (evt) {
             const escapeKeyCode = 27;
             if (evt.keyCode === escapeKeyCode) {
@@ -114,6 +126,8 @@
             artistname.innerText = artItem.artist.name;
             date.setAttribute("datetime", artDate.toISOString());
             date.innerText = artDate.toLocaleDateString();
+            
+            history.pushState({}, "", `#${encodeURIComponent(artItem.jumpHash)}`);
         }
         
         function closeFullscreenView() {
@@ -134,5 +148,6 @@
             
             document.cookie = "@IndexModel.NsfwCookieName=true; expired=Fire, 31 Dec 9999 23:59:59 GMT; SameSite=None; Secure";
         }
+    
     </script>
 }
