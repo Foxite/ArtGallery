@@ -7,10 +7,13 @@ using Microsoft.Extensions.Options;
 namespace ArtGallery.Pages;
 
 public class IndexModel : PageModel {
+	public const string NsfwCookieName = "nsfwAccepted";
+	
 	private readonly IArtRepository _artRepository;
 	
 	public ArtCollection ArtCollection { get; private set; }
 	public IOptions<PageOptions> PageOptions { get; }
+	public bool ShowNsfwWarning { get; private set; }
 
 	public IndexModel(ILogger<IndexModel> logger, IArtRepository artRepository, IOptions<PageOptions> pageOptions) {
 		_artRepository = artRepository;
@@ -27,7 +30,14 @@ public class IndexModel : PageModel {
 				};
 			}
 		}
+
+		// Nsfw is set to true, and the cookie is not set to "true"
+		bool cookieIsSet = Request.Cookies.TryGetValue(NsfwCookieName, out string? nsfwCookieValue);
+		if (PageOptions.Value.Nsfw && (!cookieIsSet || nsfwCookieValue != "true")) {
+			ShowNsfwWarning = true;
+		}
 	}
+	
 	public string GetSocialIcon(ArtistSocial social) {
 		return social.Type switch {
 			"Artfight"    => "/img/social/artfight.png",

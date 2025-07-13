@@ -8,8 +8,17 @@
     ViewData["Title"] = Model.PageOptions.Value.Title;
 }
 
+@if (Model.ShowNsfwWarning) {
+    <div class="nsfw-warning-container">
+        <dialog class="nsfw-warning" closedby="none" open>
+            Please note that images on this page are <strong>not safe for work</strong>
+            and should only be viewed by those 18+.<br/>
+            <button onclick="closeNsfwWarning(this)">Continue</button>
+        </dialog>
+    </div>
+}
+
 <main role="main">
-    @{ int i = 0; }
     @foreach (var artist in Model.ArtCollection.Artists) {
         <section>
             <h3>@artist.Name</h3>
@@ -45,7 +54,6 @@
                         </article>
                     </li>
                 }
-                @{ i++; }
             </ol>
             </div>
         </section>
@@ -118,6 +126,13 @@
                 fullscreenView.classList.add("fullyClosed");
                 closeTimeout = null;
             }, 300);
+        }
+        
+        function closeNsfwWarning(button) {
+            const dialogContainer = button.parentNode.parentNode;
+            dialogContainer.style.display = 'none';
+            
+            document.cookie = "@IndexModel.NsfwCookieName=true; expired=Fire, 31 Dec 9999 23:59:59 GMT; SameSite=None; Secure";
         }
     </script>
 }

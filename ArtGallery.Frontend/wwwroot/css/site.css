@@ -26,6 +26,23 @@ footer {
   padding-top: 1em;
 }
 
+.nsfw-warning-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  backdrop-filter: blur(20px);
+}
+
+.nsfw-warning {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
 
 
 

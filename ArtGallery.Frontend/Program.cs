@@ -1,4 +1,3 @@
-// TODO nsfw warning dialog
 // TODO image descriptions
 // TODO selectively hide images
 // TODO layout design
