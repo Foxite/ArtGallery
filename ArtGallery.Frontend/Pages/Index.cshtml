@@ -8,13 +8,13 @@
     ViewData["Title"] = "Home page";
 }
 
-<main class="artitems" role="main">
+<main role="main">
     @{ int i = 0; }
     @foreach (var artist in Model.ArtCollection.Artists) {
         <section>
             <h3>@artist.Name</h3>
             @if (artist.Socials != null) {
-                <ul>
+                <ul class="socials">
                     @foreach (ArtistSocial social in artist.Socials) {
                         <li>
                             <img
@@ -26,6 +26,7 @@
                     }
                 </ul>
             }
+            <div class="artitems">
             <ol>
                 @foreach (var art in artist.ArtItems) {
                     <li>
@@ -46,6 +47,7 @@
                 }
                 @{ i++; }
             </ol>
+            </div>
         </section>
     }
 </main>

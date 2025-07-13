@@ -8,11 +8,11 @@ RUN dotnet restore "ArtGallery.Frontend/ArtGallery.Frontend.csproj"
 COPY . .
 WORKDIR "/src/ArtGallery.Frontend"
 RUN dotnet build "ArtGallery.Frontend.csproj" -c $BUILD_CONFIGURATION -o /app/build
-RUN dotnet publish "ArtGallery.Frontend.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "ArtGallery.Frontend.csproj" -c $BUILD_CONFIGURATION -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 EXPOSE 8080
 WORKDIR /app
 COPY --from=build /app/publish .
 USER $APP_UID
-CMD ["dotnet", "ArtGallery.Frontend.dll"]
+CMD ["./ArtGallery.Frontend"]

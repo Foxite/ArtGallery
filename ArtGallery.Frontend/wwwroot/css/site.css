@@ -120,3 +120,7 @@ body {
 .socialicon {
   height: 1em;
 }
+
+.socials {
+  list-style: none;
+}
