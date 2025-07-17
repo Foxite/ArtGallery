@@ -88,7 +88,9 @@ public class FilesystemArtCollectionGenerator : ArtCollectionGenerator {
 			return artist;
 		}
 
-		var auxArtist = new Deserializer().Deserialize<Artist>(artistDocumentYaml);
+		var deserializer = new DeserializerBuilder().IgnoreUnmatchedProperties().Build();
+		
+		var auxArtist = deserializer.Deserialize<Artist>(artistDocumentYaml);
 		artist.Name = auxArtist.Name ?? artist.Name;
 		artist.Socials = auxArtist.Socials;
 		
