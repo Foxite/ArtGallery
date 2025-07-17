@@ -1,5 +1,4 @@
 ﻿@page
-@using System.Text.Encodings.Web
 @using ArtGallery.Domain
 @using Newtonsoft.Json
 @using Newtonsoft.Json.Serialization
@@ -7,6 +6,18 @@
 
 @{
     ViewData["Title"] = Model.PageOptions.Value.Title;
+}
+
+@section Styles {
+    <meta property="og:title" content="@Model.PageOptions.Value.Title" />
+    <meta property="og:type" content="website" />
+    
+    @if (!string.IsNullOrEmpty(Model.PageOptions.Value.OgDescription)) {
+        <meta property="og:description" content="@Model.PageOptions.Value.OgDescription"/>
+    }
+    @if (!string.IsNullOrEmpty(Model.PageOptions.Value.OgImageUrl)) {
+        <meta property="og:description" content="@Model.PageOptions.Value.OgImageUrl"/>
+    }
 }
 
 <main role="main">
