@@ -146,6 +146,8 @@
 
             fullscreenView.classList.add("closed");
             fullscreenView.classList.remove("open");
+            
+            history.pushState({}, "", `#`);
 
             closeTimeout = setTimeout(() => {
                 fullscreenView.classList.add("fullyClosed");
