@@ -14,5 +14,5 @@ public class ArtItem {
 	// The JumpHash will be used as a HTML element ID, url jump anchor, and CSS selector.
 	// This sanitization will suffice for now, but we need to update this if we ever start
 	// adding artists/titles with funny characters.
-	public string JumpHash => $"art-{Artist.Name}-{Title}".Replace(" ", "_");
+	public string JumpHash => Artist == null ? null : $"art-{Artist.Name}-{Title}".Replace(" ", "_");
 }

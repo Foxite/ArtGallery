@@ -1,5 +1,4 @@
 // TODO image descriptions
-// TODO selectively hide images
 // TODO layout design
 // TODO next/previous in FSV
 // TODO fix clicking on text in FSV closes it

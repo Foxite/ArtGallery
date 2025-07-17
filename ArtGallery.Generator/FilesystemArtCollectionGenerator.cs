@@ -45,8 +45,11 @@ public class FilesystemArtCollectionGenerator : ArtCollectionGenerator {
 				if (firstSpace == -1) {
 					continue;
 				}
+
+				if (!DateOnly.TryParseExact(filename[..firstSpace], "O", out DateOnly date)) {
+					continue;
+				}
 				
-				DateOnly date = DateOnly.ParseExact(filename[..firstSpace], "O");
 				string title = filename[(firstSpace + 1)..];
 				
 				artItems.Add(new ArtItem() {
@@ -58,11 +61,15 @@ public class FilesystemArtCollectionGenerator : ArtCollectionGenerator {
 				});
 			}
 
+			if (artist.ArtItems.Count == 0) {
+				continue;
+			}
+			
 			artist.ArtItems = artItems
 				.OrderBy(ai => ai.Date)
 				.ThenBy(ai => ai.Title)
 				.ToList();
-			
+
 			result.Add(artist);
 		}
 
