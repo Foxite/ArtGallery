@@ -76,9 +76,7 @@ footer {
   text-align: center;
 }
 
-.artitem > img {
-  border-radius: 2px;
-
+.artitem img {
   height: 15em;
   width: 15em;
   object-fit: contain;

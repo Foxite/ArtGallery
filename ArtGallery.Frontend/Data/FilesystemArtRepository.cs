@@ -10,19 +10,22 @@ public class FilesystemArtRepository(IOptions<FilesystemArtRepository.Options> o
 
 		foreach (Artist artist in result.Artists) {
 			foreach (ArtItem artItem in artist.ArtItems) {
-				artItem.Path = MapPathToUrl(artItem.Path);
+				artItem.Path = Path.Combine(options.Value.BaseUrl, artItem.Path);
+
+				var newThumbnailDictionary = new Dictionary<string, string>();
+				foreach ((string size, string path) in artItem.Thumbnails) {
+					newThumbnailDictionary[size] = Path.Combine(options.Value.BaseThumbUrl, path);
+				}
+				artItem.Thumbnails = newThumbnailDictionary;
 			}
 		}
 
 		return result;
 	}
 
-	private string MapPathToUrl(string path) {
-		return Path.Combine(options.Value.BaseUrl, path);
-	}
-
 	public class Options {
 		public string JsonFilePath { get; set; }
 		public string BaseUrl { get; set; }
+		public string BaseThumbUrl { get; set; }
 	}
 }

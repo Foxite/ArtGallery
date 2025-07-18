@@ -1,4 +1,5 @@
 ﻿@page
+@using System.Text.Encodings.Web
 @using ArtGallery.Frontend
 @using Newtonsoft.Json
 @using Newtonsoft.Json.Serialization
@@ -44,12 +45,19 @@
                         <article
                             id="@art.JumpHash"
                             class="artitem"
-                            data-artitem="@JsonConvert.SerializeObject(art, new JsonSerializerSettings() { ContractResolver = new CamelCasePropertyNamesContractResolver(), NullValueHandling = NullValueHandling.Ignore })">
-                            <img
-                                loading="lazy"
-                                src="@art.Path"
-                                alt="Art drawn by @art.Artist.Name in @art.Date.Year: @art.Title"
-                                onclick="openFullscreenView(this)"/>
+                            data-artitem="@JsonConvert.SerializeObject(art, new JsonSerializerSettings() {
+                                              ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                                              NullValueHandling = NullValueHandling.Ignore
+                                          })">
+                            <picture onclick="openFullscreenView(this)">
+                                <img
+                                    loading="lazy"
+                                    src="@art.Path"
+                                    alt="Art drawn by @art.Artist.Name in @art.Date.Year: @art.Title"/>
+                                @foreach ((string size, string thumbnailPath) in art.Thumbnails.Reverse()) {
+                                    <source srcset="@thumbnailPath.Replace(" ", "%20") @(size)w"/>
+                                }
+                            </picture>
                             <figure>
                                 <figcaption>
                                     <time>@art.Date.ToString("O")</time><br/>
