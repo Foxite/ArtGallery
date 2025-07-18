@@ -1,4 +1,4 @@
-using ArtGallery.Domain;
+using ArtGallery.Frontend;
 
 namespace ArtGallery.Data;
 

@@ -1,4 +1,4 @@
-namespace ArtGallery.Domain;
+namespace ArtGallery.Frontend;
 
 public class ArtistSocial {
 	public string Url { get; set; }

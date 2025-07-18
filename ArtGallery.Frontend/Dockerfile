@@ -3,7 +3,6 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
 COPY ["ArtGallery.Frontend/ArtGallery.Frontend.csproj", "ArtGallery.Frontend/ArtGallery.Frontend.csproj"]
-COPY ["ArtGallery.Common/ArtGallery.Common.csproj", "ArtGallery.Common/ArtGallery.Common.csproj"]
 RUN dotnet restore "ArtGallery.Frontend/ArtGallery.Frontend.csproj"
 COPY . .
 WORKDIR "/src/ArtGallery.Frontend"

@@ -1,4 +1,4 @@
-namespace ArtGallery.Domain;
+namespace ArtGallery.Generator;
 
 public class Artist {
 	public string Name { get; set; }

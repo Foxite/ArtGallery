@@ -1,4 +1,4 @@
-using ArtGallery.Domain;
+using ArtGallery.Frontend;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 

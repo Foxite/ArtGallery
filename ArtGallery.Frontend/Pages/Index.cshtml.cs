@@ -1,5 +1,5 @@
 using ArtGallery.Data;
-using ArtGallery.Domain;
+using ArtGallery.Frontend;
 using ArtGallery.Frontend.Options;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;

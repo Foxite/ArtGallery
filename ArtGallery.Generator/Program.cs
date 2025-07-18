@@ -1,33 +1,38 @@
-﻿using ArtGallery.Domain;
-using ArtGallery.Generator;
+﻿using ArtGallery.Generator;
 using CommandLine;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-var commandParser = new Parser(settings => {
-	settings.HelpWriter = Console.Error;
-	settings.EnableDashDash = true;
-	settings.CaseInsensitiveEnumValues = true;
-});
-		
 try {
-	ParserResult<GeneratorOptions>? arguments = commandParser.ParseArguments<GeneratorOptions>(args);
-	if (arguments.Errors.Any()) {
-		foreach (Error error in arguments.Errors) {
-			Console.Error.WriteLine("Commandline parsing errors:");
-			Console.Error.WriteLine($"{error.Tag}: {error}");
+	ParserResult<GeneratorOptions>? arguments;
+	using (var commandParser = new Parser(settings => {
+			settings.HelpWriter = Console.Error;
+			settings.EnableDashDash = true;
+			settings.CaseInsensitiveEnumValues = true;
+			settings.AutoHelp = true;
+			settings.AutoVersion = true;
+		})) {
+		arguments = commandParser.ParseArguments<GeneratorOptions>(args);
+		if (arguments.Errors.Any()) {
+			// Errors have been displayed by ParseArguments
+			return 1;
 		}
-		return 1;
 	}
-	
+
 	ArtCollectionGenerator generator = new FilesystemArtCollectionGenerator(arguments.Value.ArtDirectory);
 	ArtCollection collection = await generator.GenerateArtCollection();
+	
+	if (arguments.Value.GenerateThumbnails) {
+		ThumbnailGenerator thumbnailGenerator = new FfmpegThumbnailGenerator(arguments.Value);
+		await thumbnailGenerator.GenerateThumbnails(collection);
+	}
 	
 	string json = JsonConvert.SerializeObject(collection, new JsonSerializerSettings() {
 		NullValueHandling = NullValueHandling.Ignore,
 		Converters = {
 			new StringEnumConverter(),
 		},
+		Formatting = Formatting.Indented,
 	});
 
 	if (arguments.Value.OutputFile == "-") {
@@ -37,11 +42,7 @@ try {
 	} else {
 		File.WriteAllText(arguments.Value.OutputFile, json);
 	}
-	
-	if (arguments.Value.GenerateThumbnails) {
-		ThumbnailGenerator thumbnailGenerator = new FfmpegThumbnailGenerator(arguments.Value);
-		await thumbnailGenerator.GenerateThumbnails(collection);
-	}
+
 	return 0;
 } catch (Exception e) {
 	while (true) {

@@ -1,4 +1,3 @@
-using ArtGallery.Domain;
 using YamlDotNet.Serialization;
 
 namespace ArtGallery.Generator;

@@ -3,7 +3,6 @@ name: Build and push Docker image
 on:
   push:
     paths:
-      - ArtGallery.Common/**
       - ArtGallery.Frontend/**
       - .github/workflows/frontend.yml
 
