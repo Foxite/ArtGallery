@@ -11,7 +11,7 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}-generator
   BUILD_CONTEXT: .
-  DOCKERFILE: ArtGallery.Frontend/Dockerfile
+  DOCKERFILE: ArtGallery.Generator/Dockerfile
   GLUE_KEY_ALG: ES512
   GLUE_KEY_ID: artgallery
 
