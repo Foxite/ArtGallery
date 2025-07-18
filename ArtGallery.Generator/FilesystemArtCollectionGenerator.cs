@@ -23,6 +23,7 @@ public class FilesystemArtCollectionGenerator : ArtCollectionGenerator {
 		var result = new List<Artist>();
 
 		foreach (string artistPath in artistDirectories) {
+			Console.Error.WriteLine(artistPath);
 			string artistName = Path.GetFileName(artistPath);
 			
 			var artItems = new List<ArtItem>();
@@ -35,6 +36,7 @@ public class FilesystemArtCollectionGenerator : ArtCollectionGenerator {
 			
 			string[] artItemFiles = Directory.GetFiles(artistPath);
 			foreach (string artItemPath in artItemFiles) {
+				Console.Error.WriteLine(artItemPath);
 				string extension = Path.GetExtension(artItemPath);
 				if (!SupportedExtensions.Contains(extension[1..])) {
 					continue;
@@ -60,6 +62,7 @@ public class FilesystemArtCollectionGenerator : ArtCollectionGenerator {
 					Path = Path.GetRelativePath(_path, artItemPath),
 				});
 			}
+			Console.Error.WriteLine("--");
 
 			if (artist.ArtItems.Count == 0) {
 				continue;

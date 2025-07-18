@@ -8,6 +8,7 @@ public class FfmpegThumbnailGenerator : ThumbnailGenerator {
 	public FfmpegThumbnailGenerator(GeneratorOptions generatorOptions) : base(generatorOptions) { }
 	
 	protected async override Task GenerateThumbnail(string inputFile, string outputFile) {
+		Console.Error.WriteLine($"Generating thumbnail for {inputFile}");
 		IMediaAnalysis analysis = await FFProbe.AnalyseAsync(inputFile);
 		int width = analysis.PrimaryVideoStream!.Width;
 		int height = analysis.PrimaryVideoStream!.Height;

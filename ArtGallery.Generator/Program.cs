@@ -13,16 +13,15 @@ var commandParser = new Parser(settings => {
 try {
 	ParserResult<GeneratorOptions>? arguments = commandParser.ParseArguments<GeneratorOptions>(args);
 	if (arguments.Errors.Any()) {
-		// TODO handle
+		foreach (Error error in arguments.Errors) {
+			Console.Error.WriteLine("Commandline parsing errors:");
+			Console.Error.WriteLine($"{error.Tag}: {error}");
+		}
+		return 1;
 	}
 	
 	ArtCollectionGenerator generator = new FilesystemArtCollectionGenerator(arguments.Value.ArtDirectory);
 	ArtCollection collection = await generator.GenerateArtCollection();
-
-	if (arguments.Value.GenerateThumbnails) {
-		ThumbnailGenerator thumbnailGenerator = new FfmpegThumbnailGenerator(arguments.Value);
-		await thumbnailGenerator.GenerateThumbnails(collection);
-	}
 	
 	string json = JsonConvert.SerializeObject(collection, new JsonSerializerSettings() {
 		NullValueHandling = NullValueHandling.Ignore,
@@ -38,6 +37,12 @@ try {
 	} else {
 		File.WriteAllText(arguments.Value.OutputFile, json);
 	}
+	
+	if (arguments.Value.GenerateThumbnails) {
+		ThumbnailGenerator thumbnailGenerator = new FfmpegThumbnailGenerator(arguments.Value);
+		await thumbnailGenerator.GenerateThumbnails(collection);
+	}
+	return 0;
 } catch (Exception e) {
 	while (true) {
 		Console.Error.WriteLine($"{e.GetType().FullName}: {e.Message}");
@@ -48,4 +53,5 @@ try {
 		}
 		break;
 	}
+	return 2;
 }
