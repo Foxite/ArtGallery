@@ -15,4 +15,7 @@ public class ArtItem {
 	// This sanitization will suffice for now, but we need to update this if we ever start
 	// adding artists/titles with funny characters.
 	public string JumpHash => Artist == null ? null : $"art-{Artist.Name}-{Title}".Replace(" ", "_");
+
+	// size -> path
+	public Dictionary<string, string> Thumbnails { get; set; } = new();
 }

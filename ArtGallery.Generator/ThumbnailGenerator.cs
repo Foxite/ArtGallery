@@ -9,7 +9,7 @@ public abstract class ThumbnailGenerator {
 		GeneratorOptions = generatorOptions;
 	}
 	
-	protected abstract Task GenerateThumbnail(string inputFile, string outputFile);
+	protected abstract Task<bool> GenerateThumbnail(string inputFile, string outputFile, int size);
 
 	public async Task GenerateThumbnails(ArtCollection collection) {
 		string thumbnailDirectory = GeneratorOptions.ThumbnailDirectory;
@@ -18,14 +18,30 @@ public abstract class ThumbnailGenerator {
 		}
 		
 		foreach (Artist artist in collection.Artists) {
-			string artistThumbDirectory = Path.Combine(thumbnailDirectory, artist.Name);
+			string artistDirectory = artist.Name;
+			string artistThumbDirectory = Path.Combine(thumbnailDirectory, artistDirectory);
 			Directory.CreateDirectory(artistThumbDirectory);
-			
+
 			foreach (ArtItem artItem in artist.ArtItems) {
 				string inputFile = artItem.Path;
-				string outputFile = Path.Combine(artistThumbDirectory, Path.GetFileName(artItem.Path));
 
-				await GenerateThumbnail(inputFile, outputFile);
+				foreach (string rawSize in GeneratorOptions.ThumbnailSize.Split(',')) {
+					int size;
+					try {
+						size = int.Parse(rawSize);
+					} catch (FormatException ex) {
+						throw new FormatException("Invalid value for parameter thumbsize: Must be integers separated by comma", ex);
+					}
+
+					string filename = $"{Path.GetFileNameWithoutExtension(artItem.Path)}@{size}{Path.GetExtension(artItem.Path)}";
+					string outputFile = Path.Combine(artistThumbDirectory, filename);
+					
+					bool thumbnailWasGenerated = await GenerateThumbnail(inputFile, outputFile, size);
+
+					if (thumbnailWasGenerated) {
+						artItem.Thumbnails[rawSize] = Path.Combine(artistDirectory, filename);
+					}
+				}
 			}
 		}
 	}
