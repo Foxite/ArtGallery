@@ -18,6 +18,12 @@ try {
 	
 	ArtCollectionGenerator generator = new FilesystemArtCollectionGenerator(arguments.Value.ArtDirectory);
 	ArtCollection collection = await generator.GenerateArtCollection();
+
+	if (arguments.Value.GenerateThumbnails) {
+		ThumbnailGenerator thumbnailGenerator = new FfmpegThumbnailGenerator(arguments.Value);
+		await thumbnailGenerator.GenerateThumbnails(collection);
+	}
+	
 	string json = JsonConvert.SerializeObject(collection, new JsonSerializerSettings() {
 		NullValueHandling = NullValueHandling.Ignore,
 		Converters = {

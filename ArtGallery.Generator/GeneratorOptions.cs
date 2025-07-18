@@ -6,4 +6,13 @@ public class GeneratorOptions {
 	
 	[Option("output", Default = "-")]
 	public string OutputFile { get; set; }
+	
+	[Option("thumbnails", Default = true)]
+	public bool GenerateThumbnails { get; set; }
+	
+	[Option("thumbsize", Default = 320, HelpText = "The image's largest dimension will be set to this, and the other scaled accordingly.")]
+	public int ThumbnailSize { get; set; }
+	
+	[Option("thumbdir", Default = "")]
+	public string ThumbnailDirectory { get; set; }
 }
