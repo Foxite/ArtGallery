@@ -1,10 +1,10 @@
 using CommandLine;
 
-public class GeneratorOptions {
-	[Option("directory", Default = ".")]
+public class CliOptions {
+	[Option('d', "directory", Default = ".")]
 	public string ArtDirectory { get; set; }
 	
-	[Option("output", Default = "-")]
+	[Option('o', "output", Default = "-")]
 	public string OutputFile { get; set; }
 	
 	[Option("thumbnails")]
@@ -15,4 +15,7 @@ public class GeneratorOptions {
 	
 	[Option("thumbdir", Default = "")]
 	public string ThumbnailDirectory { get; set; }
+	
+	[Option('v', "verbose", FlagCounter = true)]
+	public int VerboseLogging { get; set; }
 }

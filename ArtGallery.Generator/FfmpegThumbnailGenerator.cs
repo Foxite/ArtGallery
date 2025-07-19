@@ -3,10 +3,10 @@ using FFMpegCore;
 namespace ArtGallery.Generator;
 
 public class FfmpegThumbnailGenerator : ThumbnailGenerator {
-	public FfmpegThumbnailGenerator(GeneratorOptions generatorOptions) : base(generatorOptions) { }
+	public FfmpegThumbnailGenerator(CliOptions cliOptions) : base(cliOptions) { }
 
 	protected async override Task<bool> GenerateThumbnail(string inputFile, string outputFile, int size) {
-		Console.Error.WriteLine($"Generating thumbnail for {inputFile} @ {size} ({outputFile})");
+		Logger.Instance.LogDebug($"Generating thumbnail for {inputFile} @ {size} ({outputFile})");
 		IMediaAnalysis analysis = await FFProbe.AnalyseAsync(inputFile);
 		int width = analysis.PrimaryVideoStream!.Width;
 		int height = analysis.PrimaryVideoStream!.Height;

@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 try {
-	ParserResult<GeneratorOptions>? arguments;
+	ParserResult<CliOptions>? arguments;
 	using (var commandParser = new Parser(settings => {
 			settings.HelpWriter = Console.Error;
 			settings.EnableDashDash = true;
@@ -12,12 +12,14 @@ try {
 			settings.AutoHelp = true;
 			settings.AutoVersion = true;
 		})) {
-		arguments = commandParser.ParseArguments<GeneratorOptions>(args);
+		arguments = commandParser.ParseArguments<CliOptions>(args);
 		if (arguments.Errors.Any()) {
 			// Errors have been displayed by ParseArguments
 			return 1;
 		}
 	}
+	
+	Logger.CreateLogger(arguments.Value);
 
 	ArtCollectionGenerator generator = new FilesystemArtCollectionGenerator(arguments.Value.ArtDirectory);
 	ArtCollection collection = await generator.GenerateArtCollection();
@@ -46,8 +48,8 @@ try {
 	return 0;
 } catch (Exception e) {
 	while (true) {
-		Console.Error.WriteLine($"{e.GetType().FullName}: {e.Message}");
-		Console.Error.WriteLine(e.StackTrace);
+		Logger.Instance.LogError($"{e.GetType().FullName}: {e.Message}");
+		Logger.Instance.LogError(e.StackTrace);
 		if (e.InnerException != null) {
 			e = e.InnerException;
 			continue;

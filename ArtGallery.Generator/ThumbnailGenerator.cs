@@ -1,18 +1,18 @@
 namespace ArtGallery.Generator;
 
 public abstract class ThumbnailGenerator {
-	protected GeneratorOptions GeneratorOptions { get; }
+	protected CliOptions CliOptions { get; }
 	
-	protected ThumbnailGenerator(GeneratorOptions generatorOptions) {
-		GeneratorOptions = generatorOptions;
+	protected ThumbnailGenerator(CliOptions cliOptions) {
+		CliOptions = cliOptions;
 	}
 	
 	protected abstract Task<bool> GenerateThumbnail(string inputFile, string outputFile, int size);
 
 	public async Task GenerateThumbnails(ArtCollection collection) {
-		string thumbnailDirectory = GeneratorOptions.ThumbnailDirectory;
+		string thumbnailDirectory = CliOptions.ThumbnailDirectory;
 		if (string.IsNullOrEmpty(thumbnailDirectory)) {
-			thumbnailDirectory = Path.Combine(GeneratorOptions.ArtDirectory, "_thumbs");
+			thumbnailDirectory = Path.Combine(CliOptions.ArtDirectory, "_thumbs");
 		}
 		
 		foreach (Artist artist in collection.Artists) {
@@ -23,7 +23,7 @@ public abstract class ThumbnailGenerator {
 			foreach (ArtItem artItem in artist.ArtItems) {
 				string inputFile = artItem.Path;
 
-				foreach (string rawSize in GeneratorOptions.ThumbnailSize.Split(',')) {
+				foreach (string rawSize in CliOptions.ThumbnailSize.Split(',')) {
 					int size;
 					try {
 						size = int.Parse(rawSize);
