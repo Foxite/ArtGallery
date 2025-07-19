@@ -89,6 +89,19 @@ footer {
 
 
 
+
+.socials {
+  list-style: none;
+  padding-left: 0;
+}
+
+.socialicon {
+  height: 1em;
+}
+
+
+
+
 #fullscreenview {
   position: fixed;
   top: 0;
@@ -138,18 +151,10 @@ footer {
   transform: scale(0);
 }
 
-#fullscreenview img {
+#fullscreenview #fsv_img {
   width: auto;
   height: auto;
   max-width: 90vw;
   max-height: 70vh;
   object-fit: contain;
-}
-
-.socialicon {
-  height: 1em;
-}
-
-.socials {
-  list-style: none;
 }

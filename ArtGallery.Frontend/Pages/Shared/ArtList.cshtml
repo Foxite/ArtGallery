@@ -1,0 +1,43 @@
+@using Newtonsoft.Json
+@using Newtonsoft.Json.Serialization
+@model ArtListModel
+
+<div class="artitems">
+    <ol>
+        @foreach (var art in Model.ArtItems) {
+            <li>
+                <article
+                    id="@art.JumpHash"
+                    class="artitem"
+                    data-artitem="@JsonConvert.SerializeObject(art, new JsonSerializerSettings() {
+                                      ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                                      NullValueHandling = NullValueHandling.Ignore,
+                                  })"
+                    onclick="openFullscreenView(this)">
+                    <picture>
+                        @foreach ((string size, string thumbnailPath) in art.Thumbnails.OrderByDescending(kvp => int.Parse(kvp.Key))) {
+                            <source srcset="@thumbnailPath.Replace(" ", "%20") @(size)w"/>
+                        }
+                        <img
+                            loading="lazy"
+                            src="@art.Path"
+                            alt="Art drawn by @art.ArtistName in @art.Date.Year: @art.Title"/>
+                    </picture>
+                    <figure>
+                        <figcaption>
+                            <time>@art.Date.ToString("O")</time>
+                            <div class="title">@art.Title</div>
+                            @if (Model.DisplayArtist) {
+                                @* TODO artist info *@
+                                <div>Drawn by @art.ArtistName</div> 
+                            }
+                        </figcaption>
+                    </figure>
+                    <template class="listitem-artistsocials">
+                        <partial name="ArtistSocials" model="@art.ArtistSocials" />
+                    </template>
+                </article>
+            </li>
+        }
+    </ol>
+</div>

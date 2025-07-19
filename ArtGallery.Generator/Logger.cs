@@ -6,19 +6,19 @@ public class Logger {
 	private readonly int _verboseLevel;
 
 	private Logger(CliOptions cliOptions) {
-		_verboseLevel = cliOptions.VerboseLogging;
+		_verboseLevel = cliOptions.VerboseLogging ? 1 : 0;
 	}
 
-	private void Log(int level, string? message) {
+	private void Log(int level, object? message) {
 		if (_verboseLevel >= level) {
 			Console.Error.WriteLine(message);
 		}
 	}
 
-	public void LogError(string? message) => Log(1, message);
-	public void LogInfo (string? message) => Log(1, message);
-	public void LogDebug(string? message) => Log(2, message);
-	public void LogTrace(string? message) => Log(3, message);
+	public void LogError(object? message) => Log(0, message);
+	public void LogInfo (object? message) => Log(1, message);
+	public void LogDebug(object? message) => Log(2, message);
+	public void LogTrace(object? message) => Log(3, message);
 	
 	public static void CreateLogger(CliOptions cliOptions) {
 		if (Instance != null) {

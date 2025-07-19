@@ -1,17 +1,36 @@
-﻿<!DOCTYPE html>
+﻿@using ArtGallery.Frontend.Options
+@using Microsoft.Extensions.Options
+@inject IOptions<PageOptions> PageOptions
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>@ViewData["Title"]</title>
+    <title>
+        @PageOptions.Value.Title
+        @if (ViewData["Title"] is string title && !string.IsNullOrEmpty(title)) {
+            @("-") @ViewData["Title"]
+        }
+    </title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    
+    <meta property="og:title" content="@PageOptions.Value.Title" />
+    <meta property="og:type" content="website" />
+
+    @if (!string.IsNullOrEmpty(PageOptions.Value.OgDescription)) {
+        <meta property="og:description" content="@PageOptions.Value.OgDescription"/>
+    }
+    @if (!string.IsNullOrEmpty(PageOptions.Value.OgImageUrl)) {
+        <meta property="og:image" content="@PageOptions.Value.OgImageUrl"/>
+    }
     
     @await RenderSectionAsync("Styles", false)
 </head>
 <body>
 <div class="container">
     @RenderBody()
+    
     <footer>
         ArtGallery - <a href="https://github.com/Foxite/ArtGallery">https://github.com/Foxite/ArtGallery</a>
     </footer>

@@ -11,5 +11,5 @@ public class ArtItem {
 	public Artist Artist { get; set; }
 
 	// size -> path
-	public Dictionary<string, string> Thumbnails { get; set; } = new();
+	public Dictionary<int, string> Thumbnails { get; set; } = new();
 }

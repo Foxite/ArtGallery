@@ -6,21 +6,34 @@ using Microsoft.Extensions.Options;
 
 namespace ArtGallery.Pages;
 
-public class IndexModel : PageModel {
+public class YearModel : PageModel {
 	private readonly IArtRepository _artRepository;
 	
 	public ArtCollection ArtCollection { get; private set; }
 	public IOptions<PageOptions> PageOptions { get; }
+	public IEnumerable<ArtListItem> ArtItems { get; set; }
 	public bool ShowNsfwWarning { get; private set; }
 
-	public IndexModel(ILogger<IndexModel> logger, IArtRepository artRepository, IOptions<PageOptions> pageOptions) {
+	public YearModel(IArtRepository artRepository, IOptions<PageOptions> pageOptions) {
 		_artRepository = artRepository;
 		PageOptions = pageOptions;
 	}
 
-	public async Task OnGet() {
-		ArtCollection = await _artRepository.GetAllArtItems(null, null, null);
-
+	public async Task OnGet(int year) {
+		ArtCollection = await _artRepository.GetAllArtItems(new DateOnly(year, 1, 1), new DateOnly(year + 1, 1, 1), null);
+		ArtItems = ArtCollection.Artists
+			.SelectMany(artist => artist.ArtItems)
+			.Select(ai => new ArtListItem {
+				Date = ai.Date,
+				Title = ai.Title,
+				Description = ai.Description,
+				Path = ai.Path,
+				ArtistName = ai.Artist.Name,
+				Thumbnails = ai.Thumbnails,
+				ArtistSocials = ai.Artist.Socials,
+			})
+			.OrderBy(ali => ali.Date);
+		
 		// TODO DRY
 		// Nsfw is set to true, and the cookie is not set to "true"
 		bool cookieIsSet = Request.Cookies.TryGetValue(Frontend.Options.PageOptions.NsfwCookieName, out string? nsfwCookieValue);

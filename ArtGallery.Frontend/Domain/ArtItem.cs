@@ -10,12 +10,6 @@ public class ArtItem {
 	public string Path { get; set; }
 	public Artist Artist { get; set; }
 
-	[JsonInclude]
-	// The JumpHash will be used as a HTML element ID, url jump anchor, and CSS selector.
-	// This sanitization will suffice for now, but we need to update this if we ever start
-	// adding artists/titles with funny characters.
-	public string JumpHash => $"art-{Artist.Name}-{Title}".Replace(" ", "_");
-
 	// size -> path
 	public Dictionary<string, string> Thumbnails { get; set; } = new();
 }

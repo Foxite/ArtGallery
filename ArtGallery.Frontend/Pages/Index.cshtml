@@ -1,174 +1,34 @@
 ﻿@page
-@using System.Text.Encodings.Web
 @using ArtGallery.Frontend
-@using Newtonsoft.Json
-@using Newtonsoft.Json.Serialization
 @model IndexModel
 
 @{
     ViewData["Title"] = Model.PageOptions.Value.Title;
 }
 
-@section Styles {
-    <meta property="og:title" content="@Model.PageOptions.Value.Title" />
-    <meta property="og:type" content="website" />
-    
-    @if (!string.IsNullOrEmpty(Model.PageOptions.Value.OgDescription)) {
-        <meta property="og:description" content="@Model.PageOptions.Value.OgDescription"/>
-    }
-    @if (!string.IsNullOrEmpty(Model.PageOptions.Value.OgImageUrl)) {
-        <meta property="og:image" content="@Model.PageOptions.Value.OgImageUrl"/>
-    }
-}
-
 <main role="main">
-    @foreach (var artist in Model.ArtCollection.Artists) {
+    @foreach (Artist artist in Model.ArtCollection.Artists) {
         <section>
             <h3>@artist.Name</h3>
-            @if (artist.Socials != null) {
-                <ul class="socials">
-                    @foreach (ArtistSocial social in artist.Socials) {
-                        <li>
-                            <img
-                                class="socialicon"
-                                alt="@social.Type"
-                                src="@Model.GetSocialIcon(social)" />
-                            <a href="@social.Url">@social.Url</a>
-                        </li>
-                    }
-                </ul>
-            }
-            <div class="artitems">
-            <ol>
-                @foreach (var art in artist.ArtItems) {
-                    <li>
-                        <article
-                            id="@art.JumpHash"
-                            class="artitem"
-                            data-artitem="@JsonConvert.SerializeObject(art, new JsonSerializerSettings() {
-                                              ContractResolver = new CamelCasePropertyNamesContractResolver(),
-                                              NullValueHandling = NullValueHandling.Ignore
-                                          })">
-                            <picture onclick="openFullscreenView(this)">
-                                <img
-                                    loading="lazy"
-                                    src="@art.Path"
-                                    alt="Art drawn by @art.Artist.Name in @art.Date.Year: @art.Title"/>
-                                @foreach ((string size, string thumbnailPath) in art.Thumbnails.Reverse()) {
-                                    <source srcset="@thumbnailPath.Replace(" ", "%20") @(size)w"/>
-                                }
-                            </picture>
-                            <figure>
-                                <figcaption>
-                                    <time>@art.Date.ToString("O")</time><br/>
-                                    <span class="title">@art.Title</span>
-                                </figcaption>
-                            </figure>
-                        </article>
-                    </li>
-                }
-            </ol>
-            </div>
+            <partial name="Shared/ArtistSocials" model="artist.Socials" />
+            <partial name="Shared/ArtList" model="
+                new ArtListModel() {
+                    ArtItems = artist.ArtItems.Select(ai => new ArtListItem {
+                        Date = ai.Date,
+                        Title = ai.Title,
+                        Description = ai.Description,
+                        Path = ai.Path,
+                        Thumbnails = ai.Thumbnails,
+                        ArtistName = artist.Name,
+                        ArtistSocials = artist.Socials,
+                    }),
+                }"/>
         </section>
     }
 </main>
 
-<div id="fullscreenview" class="closed fullyClosed" onclick="closeFullscreenView()">
-    <div id="fsv_center">
-        <figure>
-            <img
-                id="fsv_img"
-                src=""
-                alt=""/>
-            <figcaption>
-                <h4 id="fsv_title"></h4>
-                <p>Drawn on <time id="fsv_date" datetime=""></time> by <span id="fsv_artistname"></span></p>
-                <p id="fsv_desc"></p>
-            </figcaption>
-        </figure>
-    </div>
-</div>
+<partial name="Shared/FullscreenView" />
 
 @if (Model.ShowNsfwWarning) {
-    <div class="nsfw-warning-container">
-        <dialog class="nsfw-warning" closedby="none" open>
-            Please note that images on this page are <strong>not safe for work</strong>
-            and should only be viewed by those 18+.<br/>
-            <button onclick="closeNsfwWarning(this)">Continue</button>
-        </dialog>
-    </div>
-}
-
-@section Scripts {
-    <script>
-        document.addEventListener("DOMContentLoaded", function (evt) {
-            console.log(window.location.hash);
-            if (window.location.hash.startsWith("#art")) {
-                const artItemImg = document.querySelector(`[id="${decodeURIComponent(window.location.hash.substring(1)).replaceAll(`"`, `\\"`)}"] > img`);
-                openFullscreenView(artItemImg);
-            }
-        });
-        
-        document.addEventListener("keydown", function (evt) {
-            const escapeKeyCode = 27;
-            if (evt.keyCode === escapeKeyCode) {
-                closeFullscreenView();
-            }
-        });
-        
-        let closeTimeout;
-        
-        function openFullscreenView(artItemImg) {
-            if (closeTimeout) {
-                clearTimeout(closeTimeout);
-            }
-            
-            const artItem = JSON.parse(artItemImg.parentElement.getAttribute("data-artitem"));
-
-            const fullscreenView = document.querySelector("#fullscreenview");
-
-            fullscreenView.classList.remove("fullyClosed");
-            fullscreenView.classList.remove("closed");
-            fullscreenView.classList.add("open");
-            
-            const img = document.querySelector("#fsv_img");
-            const title = document.querySelector("#fsv_title");
-            const desc = document.querySelector("#fsv_desc");
-            const artistname = document.querySelector("#fsv_artistname");
-            const date = document.querySelector("#fsv_date");
-            
-            const artDate = new Date(artItem.date);
-            img.setAttribute("src", artItem.path);
-            img.setAttribute("alt", `Art drawn by ${artItem.artist.name} in ${artDate.getFullYear()}: ${artItem.title}`);
-            title.innerText = artItem.title;
-            desc.innerText = artItem.description;
-            artistname.innerText = artItem.artist.name;
-            date.setAttribute("datetime", artDate.toISOString());
-            date.innerText = artDate.toLocaleDateString();
-            
-            history.pushState({}, "", `#${encodeURIComponent(artItem.jumpHash)}`);
-        }
-        
-        function closeFullscreenView() {
-            const fullscreenView = document.querySelector("#fullscreenview");
-
-            fullscreenView.classList.add("closed");
-            fullscreenView.classList.remove("open");
-            
-            history.pushState({}, "", `#`);
-
-            closeTimeout = setTimeout(() => {
-                fullscreenView.classList.add("fullyClosed");
-                closeTimeout = null;
-            }, 300);
-        }
-        
-        function closeNsfwWarning(button) {
-            const dialogContainer = button.parentNode.parentNode;
-            dialogContainer.style.display = 'none';
-            
-            document.cookie = "@IndexModel.NsfwCookieName=true; expired=Fire, 31 Dec 9999 23:59:59 GMT; SameSite=Strict; Secure";
-        }
-    
-    </script>
+    <partial name="Shared/NsfwWarning" />
 }

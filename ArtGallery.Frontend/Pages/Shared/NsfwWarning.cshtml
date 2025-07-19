@@ -1,0 +1,17 @@
+@using ArtGallery.Frontend.Options
+<div class="nsfw-warning-container">
+    <dialog class="nsfw-warning" closedby="none" open>
+        Please note that images on this page are <strong>not safe for work</strong>
+        and should only be viewed by those 18+.<br/>
+        <button onclick="closeNsfwWarning(this)">Continue</button>
+    </dialog>
+</div>
+
+<script>
+    function closeNsfwWarning(button) {
+        const dialogContainer = button.parentNode.parentNode;
+        dialogContainer.style.display = 'none';
+        
+        document.cookie = "@PageOptions.NsfwCookieName=true; expired=Fire, 31 Dec 9999 23:59:59 GMT; SameSite=Strict; Secure";
+    }
+</script>

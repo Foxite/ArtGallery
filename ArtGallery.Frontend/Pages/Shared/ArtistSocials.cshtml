@@ -1,0 +1,14 @@
+@using ArtGallery.Frontend
+@model ICollection<ArtGallery.Frontend.ArtistSocial>
+
+<ul class="socials">
+    @foreach (ArtistSocial social in Model) {
+        <li>
+            <img
+                class="socialicon"
+                alt="@social.Type"
+                src="@social.GetSocialIconUrl()" />
+            <a href="@social.Url">@social.Url</a>
+        </li>
+    }
+</ul>

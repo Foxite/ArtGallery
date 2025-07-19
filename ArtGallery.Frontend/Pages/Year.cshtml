@@ -1,0 +1,19 @@
+@page "/year/{year:int}"
+@model ArtGallery.Pages.YearModel
+
+@{
+    ViewData["Title"] = "By year";
+}
+@* TODO proper page layout *@
+
+<partial name="Shared/ArtList" model="
+    new ArtListModel() {
+        ArtItems = Model.ArtItems,
+        DisplayArtist = true,
+    }"/>
+
+<partial name="Shared/FullscreenView" />
+
+@if (Model.ShowNsfwWarning) {
+    <partial name="Shared/NsfwWarning" />
+}

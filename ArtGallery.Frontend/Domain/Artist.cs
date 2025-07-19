@@ -5,5 +5,5 @@ public class Artist {
 	public ICollection<ArtItem> ArtItems { get; set; }
 	
 	// name => url
-	public ICollection<ArtistSocial>? Socials { get; set; }
+	public ICollection<ArtistSocial> Socials { get; set; }
 }

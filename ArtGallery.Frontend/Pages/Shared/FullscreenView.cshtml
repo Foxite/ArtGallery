@@ -1,0 +1,85 @@
+<div id="fullscreenview" class="closed fullyClosed" onclick="closeFullscreenView()">
+    <div id="fsv_center">
+        <figure>
+            <img
+                id="fsv_img"
+                src=""
+                alt=""/>
+            <figcaption>
+                <h4 id="fsv_title"></h4>
+                <p>Drawn on <time id="fsv_date" datetime=""></time> by <span id="fsv_artistname"></span></p>
+                <p id="fsv_desc"></p>
+                <p id="fsv_artist_socials"></p>
+            </figcaption>
+        </figure>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function (evt) {
+        if (window.location.hash.startsWith("#art")) {
+            const artItemArticle = document.getElementById(decodeURIComponent(window.location.hash.substring(1)));
+            openFullscreenView(artItemArticle);
+        }
+    });
+
+    document.addEventListener("keydown", function (evt) {
+        const escapeKeyCode = 27;
+        if (evt.keyCode === escapeKeyCode) {
+            closeFullscreenView();
+        }
+    });
+
+    let closeTimeout;
+
+    function openFullscreenView(artItemArticle) {
+        if (closeTimeout) {
+            clearTimeout(closeTimeout);
+        }
+
+        const artItem = JSON.parse(artItemArticle.getAttribute("data-artitem"));
+
+        const fullscreenView = document.querySelector("#fullscreenview");
+
+        fullscreenView.classList.remove("fullyClosed");
+        fullscreenView.classList.remove("closed");
+        fullscreenView.classList.add("open");
+
+        const img = document.querySelector("#fsv_img");
+        const title = document.querySelector("#fsv_title");
+        const desc = document.querySelector("#fsv_desc");
+        const artistname = document.querySelector("#fsv_artistname");
+        const date = document.querySelector("#fsv_date");
+
+        const artDate = new Date(artItem.date);
+        img.setAttribute("src", artItem.path);
+        img.setAttribute("alt", `Art drawn by ${artItem.artistName} in ${artDate.getFullYear()}: ${artItem.title}`);
+        title.innerText = artItem.title;
+        desc.innerText = artItem.description;
+        artistname.innerText = artItem.artistName;
+        date.setAttribute("datetime", artDate.toISOString());
+        date.innerText = artDate.toLocaleDateString();
+        
+        const socials = artItemArticle.querySelector(".listitem-artistsocials");
+        const cloneSocials = socials.content.cloneNode(true);
+        const fsvSocials = fullscreenView.querySelector("#fsv_artist_socials");
+        fsvSocials.innerHTML = "";
+        fsvSocials.appendChild(cloneSocials);
+
+        history.pushState({}, "", `#${encodeURIComponent(artItem.jumpHash)}`);
+    }
+
+    function closeFullscreenView() {
+        const fullscreenView = document.querySelector("#fullscreenview");
+
+        fullscreenView.classList.add("closed");
+        fullscreenView.classList.remove("open");
+
+        history.pushState({}, "", `#`);
+
+        closeTimeout = setTimeout(() => {
+            fullscreenView.classList.add("fullyClosed");
+            closeTimeout = null;
+        }, 300);
+    }
+</script>
