@@ -7,7 +7,7 @@ public class GeneratorOptions {
 	[Option("output", Default = "-")]
 	public string OutputFile { get; set; }
 	
-	[Option("thumbnails", Default = true)]
+	[Option("thumbnails")]
 	public bool GenerateThumbnails { get; set; }
 	
 	[Option("thumbsize", Default = "320", HelpText = "The different sizes to generate thumbnails for, separated by comma.\nThe image's largest dimension will be set to this, and the other scaled accordingly.")]
