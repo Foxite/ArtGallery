@@ -58,6 +58,9 @@ jobs:
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
 
+  trigger-update:
+    runs-on: ubuntu-latest
+    steps:
       - name: Trigger update
         uses: Foxite/trigger-update@v1.0
         with:
