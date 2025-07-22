@@ -60,6 +60,7 @@ jobs:
 
   trigger-update:
     runs-on: ubuntu-latest
+    needs: build-and-push-image
     steps:
       - name: Trigger update
         uses: Foxite/trigger-update@v1.0
