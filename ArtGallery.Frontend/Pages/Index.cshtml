@@ -2,10 +2,6 @@
 @using ArtGallery.Frontend
 @model IndexModel
 
-@{
-    ViewData["Title"] = Model.PageOptions.Value.Title;
-}
-
 <main role="main">
     @foreach (Artist artist in Model.ArtCollection.Artists) {
         <section>
