@@ -10,6 +10,8 @@ public abstract class ThumbnailGenerator {
 	protected abstract Task<bool> GenerateThumbnail(string inputFile, string outputFile, int size);
 
 	public async Task GenerateThumbnails(ArtCollection collection) {
+		Directory.CreateDirectory(CliOptions.ThumbnailDirectory);
+		
 		foreach (Artist artist in collection.Artists) {
 			string artistDirectory = artist.Name;
 			string artistThumbDirectory = Path.Combine(CliOptions.ThumbnailDirectory, artistDirectory);
