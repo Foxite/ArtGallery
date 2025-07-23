@@ -1,3 +1,5 @@
+using CliWrap;
+
 namespace ArtGallery.Generator;
 
 public abstract class ThumbnailGenerator {
@@ -18,7 +20,7 @@ public abstract class ThumbnailGenerator {
 			Directory.CreateDirectory(artistThumbDirectory);
 
 			foreach (ArtItem artItem in artist.ArtItems) {
-				string inputFile = artItem.Path;
+				string inputFile = Path.Combine(CliOptions.ArtDirectory, artItem.Path);
 
 				foreach (int size in CliOptions.ThumbnailSize) {
 					string filename = $"{Path.GetFileNameWithoutExtension(artItem.Path)}@{size}{Path.GetExtension(artItem.Path)}";
