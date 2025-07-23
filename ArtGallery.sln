@@ -4,6 +4,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArtGallery.Frontend", "ArtG
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArtGallery.Generator", "ArtGallery.Generator\ArtGallery.Generator.csproj", "{71E32942-D381-47B4-AAEF-A6633356BB52}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Folder", "Solution Folder", "{80ABD95B-5D07-481B-A385-114EC40682AA}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\frontend.yml = .github\workflows\frontend.yml
+		.github\workflows\generator.yml = .github\workflows\generator.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
