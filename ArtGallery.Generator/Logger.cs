@@ -6,7 +6,7 @@ public class Logger {
 	private readonly int _verboseLevel;
 
 	private Logger(CliOptions cliOptions) {
-		_verboseLevel = cliOptions.VerboseLogging ? 1 : 0;
+		_verboseLevel = cliOptions.VerboseLogging ? 3 : 0;
 	}
 
 	private void Log(int level, object? message) {
