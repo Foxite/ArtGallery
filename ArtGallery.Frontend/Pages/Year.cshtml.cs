@@ -32,11 +32,11 @@ public class YearModel : PageModel {
 				Thumbnails = ai.Thumbnails,
 				ArtistSocials = ai.Artist.Socials,
 			})
-			.OrderBy(ali => ali.Date);
+			.OrderByDescending(ali => ali.Date);
 		
 		// TODO DRY
 		// Nsfw is set to true, and the cookie is not set to "true"
-		bool cookieIsSet = Request.Cookies.TryGetValue(Frontend.Options.PageOptions.NsfwCookieName, out string? nsfwCookieValue);
+		bool cookieIsSet = Request.Cookies.TryGetValue(Constants.NsfwCookieName, out string? nsfwCookieValue);
 		if (PageOptions.Value.Nsfw && (!cookieIsSet || nsfwCookieValue != "true")) {
 			ShowNsfwWarning = true;
 		}
