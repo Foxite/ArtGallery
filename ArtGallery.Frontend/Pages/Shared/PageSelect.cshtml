@@ -1,0 +1,25 @@
+<nav class="pageselect">
+    <menu>
+        @{
+            int currentYear = 0;
+            if (ViewData.TryGetValue(Constants.SelectedYearViewData, out object? currentYearBox) && currentYearBox != null) {
+                currentYear = (int) currentYearBox;
+            }
+        }
+
+        <li class="@(currentYear == 0 ? "selected" : "")">
+            <div>
+                @* TODO this causes issues when proxying behind a path base. *@
+                <a href="/">All</a>
+            </div>
+        </li>
+        @* TODO dynamic year range *@
+        @for (int i = 2022; i <= 2025; i++) {
+            <li class="@(currentYear == i ? "selected" : "")">
+                <div>
+                    <a href="/year/@i">@i</a>
+                </div>
+            </li>
+        }
+    </menu>
+</nav>

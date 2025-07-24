@@ -13,13 +13,15 @@ public class YearModel : PageModel {
 	public IOptions<PageOptions> PageOptions { get; }
 	public IEnumerable<ArtListItem> ArtItems { get; set; }
 	public bool ShowNsfwWarning { get; private set; }
-
+	
 	public YearModel(IArtRepository artRepository, IOptions<PageOptions> pageOptions) {
 		_artRepository = artRepository;
 		PageOptions = pageOptions;
 	}
 
 	public async Task OnGet(int year) {
+		ViewData[Constants.SelectedYearViewData] = year;
+		
 		ArtCollection = await _artRepository.GetAllArtItems(new DateOnly(year, 1, 1), new DateOnly(year + 1, 1, 1), null);
 		ArtItems = ArtCollection.Artists
 			.SelectMany(artist => artist.ArtItems)
