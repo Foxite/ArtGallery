@@ -50,6 +50,9 @@
         const desc = document.querySelector("#fsv_desc");
         const artistname = document.querySelector("#fsv_artistname");
         const date = document.querySelector("#fsv_date");
+        
+        // Set to null before setting the real value, to avoid showing the previously opened image while the new one is loading
+        img.setAttribute("src", "");
 
         const artDate = new Date(artItem.date);
         img.setAttribute("src", artItem.path);
