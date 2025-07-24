@@ -2,10 +2,8 @@
 // TODO layout design
 // TODO next/previous in FSV
 // TODO fix clicking on text in FSV closes it
-// TODO thumbnail generation
 // TODO explicit dark mode colors?
 // TODO artist page
-// TODO main page should paginate by year and display art not grouped by artist (display artist socials in fsv)
 
 using ArtGallery.Data;
 using ArtGallery.Frontend.Options;
