@@ -22,6 +22,8 @@ jobs:
       packages: write
       attestations: write
       id-token: write
+    outputs:
+      images: ${{ steps.meta.outputs.tags }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -67,6 +69,6 @@ jobs:
         with:
           keyId: ${{ env.GLUE_KEY_ID }}
           algorithm: ${{ env.GLUE_KEY_ALG }}
-          images: ${{ steps.meta.outputs.tags }}
+          images: ${{ needs.build-and-push-image.outputs.images }}
           glueUrl: ${{ secrets.GLUE_URL }}
           privateKey: ${{ secrets.GLUE_KEY }}
