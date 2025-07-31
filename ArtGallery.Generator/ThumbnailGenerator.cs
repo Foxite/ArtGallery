@@ -25,6 +25,10 @@ public abstract class ThumbnailGenerator {
 				foreach (int size in CliOptions.ThumbnailSize) {
 					string filename = $"{Path.GetFileNameWithoutExtension(artItem.Path)}@{size}{Path.GetExtension(artItem.Path)}";
 					string outputFile = Path.Combine(artistThumbDirectory, filename);
+
+					if (File.Exists(outputFile)) {
+						continue;
+					}
 					
 					bool thumbnailWasGenerated = await GenerateThumbnail(inputFile, outputFile, size);
 
