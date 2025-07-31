@@ -1,5 +1,3 @@
-using CliWrap;
-
 namespace ArtGallery.Generator;
 
 public abstract class ThumbnailGenerator {
