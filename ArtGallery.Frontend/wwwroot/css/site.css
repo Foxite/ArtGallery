@@ -176,7 +176,7 @@ footer {
   display: flex;
   flex-direction: row;
   
-  gap: 0.1em;
+  gap: 2px;
 }
 
 .pageselect li {
