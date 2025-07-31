@@ -5,11 +5,21 @@
     ViewData["Title"] = "By year";
 }
 
+<partial name="PageSelect" model="new PageSelectModel() {
+             MinYear = Model.MinYear,
+             MaxYear = Model.MaxYear,
+         }" />
+
 <partial name="Shared/ArtList" model="
     new ArtListModel() {
         ArtItems = Model.ArtItems,
         DisplayArtist = true,
     }"/>
+
+<partial name="PageSelect" model="new PageSelectModel() {
+             MinYear = Model.MinYear,
+             MaxYear = Model.MaxYear,
+         }" />
 
 <partial name="Shared/FullscreenView" />
 

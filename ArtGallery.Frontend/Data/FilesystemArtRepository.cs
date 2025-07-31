@@ -5,8 +5,8 @@ using Newtonsoft.Json;
 namespace ArtGallery.Data;
 
 public class FilesystemArtRepository(IOptions<FilesystemArtRepository.Options> options) : InMemoryArtRepository {
-	protected override ArtCollection GetArtItems() {
-		var result = JsonConvert.DeserializeObject<ArtCollection>(File.ReadAllText(options.Value.JsonFilePath)) ?? throw new Exception("Unable to deserialize art file into List<Artist>");
+	protected async override Task<ArtCollection> GetArtItems() {
+		var result = JsonConvert.DeserializeObject<ArtCollection>(await File.ReadAllTextAsync(options.Value.JsonFilePath)) ?? throw new Exception("Unable to deserialize art file into List<Artist>");
 
 		foreach (Artist artist in result.Artists) {
 			foreach (ArtItem artItem in artist.ArtItems) {

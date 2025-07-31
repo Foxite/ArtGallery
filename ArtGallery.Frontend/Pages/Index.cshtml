@@ -2,6 +2,11 @@
 @using ArtGallery.Frontend
 @model IndexModel
 
+<partial name="PageSelect" model="new PageSelectModel() {
+             MinYear = Model.MinYear,
+             MaxYear = Model.MaxYear,
+         }" />
+
 <main role="main">
     @foreach (Artist artist in Model.ArtCollection.Artists) {
         <section>
@@ -22,6 +27,11 @@
         </section>
     }
 </main>
+
+<partial name="PageSelect" model="new PageSelectModel() {
+             MinYear = Model.MinYear,
+             MaxYear = Model.MaxYear,
+         }" />
 
 <partial name="Shared/FullscreenView" />
 

@@ -11,8 +11,10 @@ public class YearModel : PageModel {
 	
 	public ArtCollection ArtCollection { get; private set; }
 	public IOptions<PageOptions> PageOptions { get; }
-	public IEnumerable<ArtListItem> ArtItems { get; set; }
 	public bool ShowNsfwWarning { get; private set; }
+	public int MinYear { get; set; }
+	public int MaxYear { get; set; }
+	public IEnumerable<ArtListItem> ArtItems { get; set; }
 	
 	public YearModel(IArtRepository artRepository, IOptions<PageOptions> pageOptions) {
 		_artRepository = artRepository;
@@ -21,6 +23,7 @@ public class YearModel : PageModel {
 
 	public async Task OnGet(int year) {
 		ViewData[Constants.SelectedYearViewData] = year;
+		(MinYear, MaxYear) = await _artRepository.GetYearRange();
 		
 		ArtCollection = await _artRepository.GetAllArtItems(new DateOnly(year, 1, 1), new DateOnly(year + 1, 1, 1), null);
 		ArtItems = ArtCollection.Artists

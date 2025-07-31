@@ -62,7 +62,7 @@ public class TestArtRepository : InMemoryArtRepository {
 		}
 	}
 
-	protected override ArtCollection GetArtItems() => new ArtCollection() {
+	protected override Task<ArtCollection> GetArtItems() => Task.FromResult(new ArtCollection() {
 		Artists = _artists,
-	};
+	});
 }

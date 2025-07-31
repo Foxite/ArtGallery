@@ -1,3 +1,5 @@
+@model PageSelectModel
+
 <nav class="pageselect">
     <menu>
         @{
@@ -14,7 +16,7 @@
             </div>
         </li>
         @* TODO dynamic year range *@
-        @for (int i = 2022; i <= 2025; i++) {
+        @for (int i = Model.MinYear; i <= Model.MaxYear; i++) {
             <li class="@(currentYear == i ? "selected" : "")">
                 <div>
                     <a href="/year/@i">@i</a>

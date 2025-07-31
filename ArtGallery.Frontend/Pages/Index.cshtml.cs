@@ -12,6 +12,8 @@ public class IndexModel : PageModel {
 	public ArtCollection ArtCollection { get; private set; }
 	public IOptions<PageOptions> PageOptions { get; }
 	public bool ShowNsfwWarning { get; private set; }
+	public int MinYear { get; set; }
+	public int MaxYear { get; set; }
 
 	public IndexModel(ILogger<IndexModel> logger, IArtRepository artRepository, IOptions<PageOptions> pageOptions) {
 		_artRepository = artRepository;
@@ -19,6 +21,8 @@ public class IndexModel : PageModel {
 	}
 
 	public async Task OnGet() {
+		(MinYear, MaxYear) = await _artRepository.GetYearRange();
+		
 		ArtCollection = await _artRepository.GetAllArtItems(null, null, null);
 
 		// TODO DRY
