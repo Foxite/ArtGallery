@@ -19,4 +19,7 @@ public class CliOptions {
 	// FlagCounter is broken for default verbs https://github.com/commandlineparser/commandline/issues/888
 	[Option('v', "verbose", HelpText = "Enable verbose logging.")]
 	public bool VerboseLogging { get; set; }
+	
+	[Option('x', "includeMarked", HelpText = "Include items marked with an 'x'.")]
+	public bool IncludeMarked { get; set; }
 }

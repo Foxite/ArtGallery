@@ -21,7 +21,7 @@ try {
 	
 	Logger.CreateLogger(arguments.Value);
 
-	ArtCollectionGenerator generator = new FilesystemArtCollectionGenerator(arguments.Value.ArtDirectory);
+	ArtCollectionGenerator generator = new FilesystemArtCollectionGenerator(arguments.Value);
 	ArtCollection collection = await generator.GenerateArtCollection();
 	
 	if (arguments.Value.GenerateThumbnails) {

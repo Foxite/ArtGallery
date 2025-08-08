@@ -6,18 +6,18 @@ namespace ArtGallery.Generator;
 /// Generates an ArtCollection based on a directory
 /// </summary>
 public class FilesystemArtCollectionGenerator : ArtCollectionGenerator {
-	private readonly string _path;
+	private readonly CliOptions _options;
 
 	private static readonly string[] SupportedExtensions = [
 		"png", "jpg", "jpeg", "gif", "webp", "apng",
 	];
 	
-	public FilesystemArtCollectionGenerator(string path) {
-		_path = path;
+	public FilesystemArtCollectionGenerator(CliOptions options) {
+		_options = options;
 	}
 
 	public override Task<ArtCollection> GenerateArtCollection() {
-		string[] artistDirectories = Directory.GetDirectories(_path);
+		string[] artistDirectories = Directory.GetDirectories(_options.ArtDirectory);
 
 		var result = new List<Artist>();
 
@@ -47,7 +47,12 @@ public class FilesystemArtCollectionGenerator : ArtCollectionGenerator {
 					continue;
 				}
 
-				if (!DateOnly.TryParseExact(filename[..firstSpace], "O", out DateOnly date)) {
+				string dateSegment = filename[..firstSpace];
+				if (_options.IncludeMarked && dateSegment[^1] == 'x') {
+					dateSegment = dateSegment[..^1];
+				}
+
+				if (!DateOnly.TryParseExact(dateSegment, "O", out DateOnly date)) {
 					continue;
 				}
 				
@@ -58,7 +63,7 @@ public class FilesystemArtCollectionGenerator : ArtCollectionGenerator {
 					Date = date,
 					Description = "TODO Description",
 					Title = title,
-					Path = Path.GetRelativePath(_path, artItemPath),
+					Path = Path.GetRelativePath(_options.ArtDirectory, artItemPath),
 				});
 			}
 			Logger.Instance.LogTrace("--");
