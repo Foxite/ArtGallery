@@ -16,7 +16,7 @@ public class FilesystemArtCollectionGenerator : ArtCollectionGenerator {
 		_options = options;
 	}
 
-	public override Task<ArtCollection> GenerateArtCollection() {
+	public async override Task<ArtCollection> GenerateArtCollection() {
 		string[] artistDirectories = Directory.GetDirectories(_options.ArtDirectory);
 
 		var result = new List<Artist>();
@@ -31,7 +31,7 @@ public class FilesystemArtCollectionGenerator : ArtCollectionGenerator {
 				ArtItems = artItems
 			};
 
-			artist = PopulateArtist(artist, artistPath);
+			artist = await PopulateArtist(artist, artistPath);
 			
 			string[] artItemFiles = Directory.GetFiles(artistPath);
 			foreach (string artItemPath in artItemFiles) {
@@ -59,7 +59,6 @@ public class FilesystemArtCollectionGenerator : ArtCollectionGenerator {
 				string title = filename[(firstSpace + 1)..];
 				
 				artItems.Add(new ArtItem() {
-					//Artist = artist,
 					Date = date,
 					Description = "TODO Description",
 					Title = title,
@@ -80,17 +79,17 @@ public class FilesystemArtCollectionGenerator : ArtCollectionGenerator {
 			result.Add(artist);
 		}
 
-		return Task.FromResult(new ArtCollection() {
+		return new ArtCollection() {
 			Artists = result.OrderBy(artist => artist.Name).ToList(),
-		});
+		};
 	}
 
-	private Artist PopulateArtist(Artist artist, string artistPath) {
+	private async Task<Artist> PopulateArtist(Artist artist, string artistPath) {
 		const string artistFileName = "artist.yaml";
 		string artistFile = Path.Combine(artistPath, artistFileName);
 		string artistDocumentYaml;
 		try {
-			artistDocumentYaml = File.ReadAllText(artistFile);
+			artistDocumentYaml = await File.ReadAllTextAsync(artistFile);
 		} catch (FileNotFoundException) {
 			return artist;
 		}

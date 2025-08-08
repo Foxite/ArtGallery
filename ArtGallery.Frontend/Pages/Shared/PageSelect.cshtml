@@ -15,7 +15,6 @@
                 <a href="/">All</a>
             </div>
         </li>
-        @* TODO dynamic year range *@
         @for (int i = Model.MinYear; i <= Model.MaxYear; i++) {
             <li class="@(currentYear == i ? "selected" : "")">
                 <div>
