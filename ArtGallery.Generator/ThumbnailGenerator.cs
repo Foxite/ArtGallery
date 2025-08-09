@@ -24,11 +24,12 @@ public abstract class ThumbnailGenerator {
 					string filename = $"{Path.GetFileNameWithoutExtension(artItem.Path)}@{size}{Path.GetExtension(artItem.Path)}";
 					string outputFile = Path.Combine(artistThumbDirectory, filename);
 
+					bool thumbnailWasGenerated;
 					if (File.Exists(outputFile)) {
-						continue;
+						thumbnailWasGenerated = true;
+					} else {
+						thumbnailWasGenerated = await GenerateThumbnail(inputFile, outputFile, size);
 					}
-					
-					bool thumbnailWasGenerated = await GenerateThumbnail(inputFile, outputFile, size);
 
 					if (thumbnailWasGenerated) {
 						artItem.Thumbnails[size] = Path.Combine(artistDirectory, filename);
