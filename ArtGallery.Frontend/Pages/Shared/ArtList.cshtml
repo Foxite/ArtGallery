@@ -12,23 +12,24 @@
                     data-artitem="@JsonConvert.SerializeObject(art, new JsonSerializerSettings() {
                                       ContractResolver = new CamelCasePropertyNamesContractResolver(),
                                       NullValueHandling = NullValueHandling.Ignore,
-                                  })"
-                    onclick="openFullscreenView(this)">
+                                  })">
                     <figure>
-                        <picture>
-                            @foreach ((string size, string thumbnailPath) in art.Thumbnails.OrderByDescending(kvp => int.Parse(kvp.Key))) {
-                                <source srcset="@thumbnailPath.Replace(" ", "%20") @(size)w"/>
-                            }
-                            <img
-                                loading="lazy"
-                                src="@art.Path"
-                                alt="Art drawn by @art.ArtistName in @art.Date.Year: @art.Title"/>
-                        </picture>
+                        <a class="artitemAnchor" href="@art.Path">
+                            <picture>
+                                @foreach ((string size, string thumbnailPath) in art.Thumbnails.OrderByDescending(kvp => int.Parse(kvp.Key))) {
+                                    <source srcset="@thumbnailPath.Replace(" ", "%20") @(size)w"/>
+                                }
+                                <img
+                                    loading="lazy"
+                                    src="@art.Path"
+                                    alt="Art drawn by @art.ArtistName in @art.Date.Year: @art.Title"/>
+                            </picture>
+                        </a>
                         <figcaption>
                             <time>@art.Date.ToString("O")</time>
                             <div class="title">@art.Title</div>
                             @if (Model.DisplayArtist) {
-                                <div>Drawn by @art.ArtistName</div> 
+                                <div>Drawn by @art.ArtistName</div>
                             }
                         </figcaption>
                     </figure>

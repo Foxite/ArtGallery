@@ -16,16 +16,21 @@
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function (evt) {
+    document.addEventListener("DOMContentLoaded", () => {
         if (window.location.hash.startsWith("#art")) {
             const artItemArticle = document.getElementById(decodeURIComponent(window.location.hash.substring(1)));
             openFullscreenView(artItemArticle);
         }
+        
+        for (const artitem of document.querySelectorAll(".artitem")) {
+            artitem.addEventListener("click", event => openFullscreenView(event.currentTarget));
+            artitem.querySelector(".artitemAnchor").addEventListener("click", event => event.preventDefault());
+        }
     });
 
-    document.addEventListener("keydown", function (evt) {
+    document.addEventListener("keydown", function (event) {
         const escapeKeyCode = 27;
-        if (evt.keyCode === escapeKeyCode) {
+        if (event.keyCode === escapeKeyCode) {
             closeFullscreenView();
         }
     });
@@ -37,6 +42,7 @@
             clearTimeout(closeTimeout);
         }
 
+        console.log(artItemArticle);
         const artItem = JSON.parse(artItemArticle.getAttribute("data-artitem"));
 
         const fullscreenView = document.querySelector("#fullscreenview");
