@@ -60,7 +60,7 @@ public class FilesystemArtCollectionGenerator : ArtCollectionGenerator {
 				
 				artItems.Add(new ArtItem() {
 					Date = date,
-					Description = "TODO Description",
+					Description = "", // TODO Description
 					Title = title,
 					Path = Path.GetRelativePath(_options.ArtDirectory, artItemPath),
 				});

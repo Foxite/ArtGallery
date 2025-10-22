@@ -163,6 +163,15 @@ footer {
 
 
 
+.artistselect menu {
+  display: flex;
+  flex-direction: row;
+  /*list-style: none;*/
+}
+
+
+
+
 .pageselect {
   width: 100%;
   display: flex;

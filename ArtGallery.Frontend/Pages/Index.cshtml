@@ -7,10 +7,22 @@
              MaxYear = Model.MaxYear,
          }" />
 
+<!--
+<nav class="artistselect">
+    <menu>
+        @foreach (Artist artist in Model.ArtCollection.Artists) {
+            <li>
+                <a href="#artist-@artist.Name">@artist.Name</a>
+            </li>
+        }
+    </menu>
+</nav>
+-->
+
 <main role="main">
     @foreach (Artist artist in Model.ArtCollection.Artists) {
         <section>
-            <h3>@artist.Name</h3>
+            <h3 id="artist-@artist.Name">@artist.Name</h3>
             <partial name="Shared/ArtistSocials" model="artist.Socials" />
             <partial name="Shared/ArtList" model="
                 new ArtListModel() {
