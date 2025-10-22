@@ -26,14 +26,15 @@
             <partial name="Shared/ArtistSocials" model="artist.Socials" />
             <partial name="Shared/ArtList" model="
                 new ArtListModel() {
-                    ArtItems = artist.ArtItems.Select(ai => new ArtListItem {
-                        Date = ai.Date,
-                        Title = ai.Title,
-                        Description = ai.Description,
-                        Path = ai.Path,
-                        Thumbnails = ai.Thumbnails,
+                    ArtItems = artist.ArtItems.Select(art => new ArtListItem {
+                        Date = art.Date,
+                        Title = art.Title,
+                        Description = art.Description,
+                        Path = art.Path,
+                        Thumbnails = art.Thumbnails,
                         ArtistName = artist.Name,
                         ArtistSocials = artist.Socials,
+                        IsPixel = art.IsPixel,
                     }),
                 }"/>
         </section>

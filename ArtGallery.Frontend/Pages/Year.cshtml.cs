@@ -28,14 +28,15 @@ public class YearModel : PageModel {
 		ArtCollection = await _artRepository.GetAllArtItems(new DateOnly(year, 1, 1), new DateOnly(year + 1, 1, 1), null);
 		ArtItems = ArtCollection.Artists
 			.SelectMany(artist => artist.ArtItems)
-			.Select(ai => new ArtListItem {
-				Date = ai.Date,
-				Title = ai.Title,
-				Description = ai.Description,
-				Path = ai.Path,
-				ArtistName = ai.Artist.Name,
-				Thumbnails = ai.Thumbnails,
-				ArtistSocials = ai.Artist.Socials,
+			.Select(artItem => new ArtListItem {
+				Date = artItem.Date,
+				Title = artItem.Title,
+				Description = artItem.Description,
+				Path = artItem.Path,
+				ArtistName = artItem.Artist.Name,
+				Thumbnails = artItem.Thumbnails,
+				ArtistSocials = artItem.Artist.Socials,
+				IsPixel = artItem.IsPixel,
 			})
 			.OrderByDescending(ali => ali.Date);
 		

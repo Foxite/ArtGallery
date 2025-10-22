@@ -35,11 +35,11 @@ public abstract class InMemoryArtRepository : IArtRepository {
 			var artItems = artist.ArtItems.AsEnumerable();
 			
 			if (min.HasValue) {
-				artItems = artItems.Where(ai => ai.Date >= min.Value);
+				artItems = artItems.Where(artItem => artItem.Date >= min.Value);
 			}
 
 			if (max.HasValue) {
-				artItems = artItems.Where(ai => ai.Date < max.Value);
+				artItems = artItems.Where(artItem => artItem.Date < max.Value);
 			}
 
 			artist.ArtItems = artItems.ToList();

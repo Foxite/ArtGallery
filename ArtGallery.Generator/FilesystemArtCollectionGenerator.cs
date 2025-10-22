@@ -1,3 +1,4 @@
+using FFMpegCore;
 using YamlDotNet.Serialization;
 
 namespace ArtGallery.Generator;
@@ -57,12 +58,14 @@ public class FilesystemArtCollectionGenerator : ArtCollectionGenerator {
 				}
 				
 				string title = filename[(firstSpace + 1)..];
+				bool isPixel = await ImageIsPixel(artItemPath);
 				
 				artItems.Add(new ArtItem() {
 					Date = date,
 					Description = "", // TODO Description
 					Title = title,
 					Path = Path.GetRelativePath(_options.ArtDirectory, artItemPath),
+					IsPixel = isPixel,
 				});
 			}
 			Logger.Instance.LogTrace("--");
@@ -72,8 +75,8 @@ public class FilesystemArtCollectionGenerator : ArtCollectionGenerator {
 			}
 			
 			artist.ArtItems = artItems
-				.OrderBy(ai => ai.Date)
-				.ThenBy(ai => ai.Title)
+				.OrderBy(artItem => artItem.Date)
+				.ThenBy(artItem => artItem.Title)
 				.ToList();
 
 			result.Add(artist);
@@ -101,5 +104,17 @@ public class FilesystemArtCollectionGenerator : ArtCollectionGenerator {
 		artist.Socials = auxArtist.Socials;
 		
 		return artist;
+	}
+
+	private async Task<bool> ImageIsPixel(string filePath) {
+		// TODO need a better method than by file size.
+		// Probably have to use a file marker.
+		IMediaAnalysis ffprobeResult = await FFProbe.AnalyseAsync(filePath);
+		if (ffprobeResult.PrimaryVideoStream == null) {
+			Logger.Instance.LogWarning($"Trying to determine if a non-image file is pixel art: {filePath}");
+			return false;
+		}
+
+		return ffprobeResult.PrimaryVideoStream.Height < 250 || ffprobeResult.PrimaryVideoStream.Width < 250;
 	}
 }

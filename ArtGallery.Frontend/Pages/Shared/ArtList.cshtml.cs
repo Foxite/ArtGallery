@@ -14,6 +14,7 @@ public class ArtListItem {
 	public string Description { get; set; }
 	public string Path { get; set; }
 	public string ArtistName { get; set; }
+	public bool IsPixel { get; set; }
 
 	[JsonProperty]
 	// The JumpHash will be used as a HTML element ID, url jump anchor, and CSS selector.

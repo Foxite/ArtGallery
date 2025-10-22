@@ -9,6 +9,7 @@ public class ArtItem {
 	public string Description { get; set; }
 	public string Path { get; set; }
 	public Artist Artist { get; set; }
+	public bool IsPixel { get; set; }
 
 	// size -> path
 	public Dictionary<string, string> Thumbnails { get; set; } = new();

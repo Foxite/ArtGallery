@@ -4,6 +4,7 @@
             <img
                 id="fsv_img"
                 src=""
+                class=""
                 alt=""/>
             <figcaption>
                 <h4 id="fsv_title"></h4>
@@ -50,13 +51,17 @@
         fullscreenView.classList.remove("fullyClosed");
         fullscreenView.classList.remove("closed");
         fullscreenView.classList.add("open");
-
+        
         const img = document.querySelector("#fsv_img");
         const title = document.querySelector("#fsv_title");
         const desc = document.querySelector("#fsv_desc");
         const artistname = document.querySelector("#fsv_artistname");
         const date = document.querySelector("#fsv_date");
-        
+
+        if (artItem.isPixel) {
+            img.classList.add("pixel");
+        }
+
         // Set to null before setting the real value, to avoid showing the previously opened image while the new one is loading
         img.setAttribute("src", "");
 
@@ -88,6 +93,9 @@
 
         closeTimeout = setTimeout(() => {
             fullscreenView.classList.add("fullyClosed");
+
+            const img = document.querySelector("#fsv_img");
+            img.classList.remove("pixel");
             closeTimeout = null;
         }, 300);
     }
