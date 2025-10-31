@@ -44,7 +44,15 @@
         }
 
         //console.log(artItemArticle);
-        const artItem = JSON.parse(artItemArticle.getAttribute("data-artitem"));
+        const artItem = {
+            jumpHash: artItemArticle.getAttribute("id"),
+            date: new Date(artItemArticle.querySelector("time").innerText),
+            isPixel: artItemArticle.getAttribute("data-ispixel") === "true",
+            path: artItemArticle.getAttribute("data-fullimage"),
+            artistName: artItemArticle.getAttribute("data-artistname"),
+            title: artItemArticle.getAttribute("data-title"),
+            description: artItemArticle.getAttribute("data-description"),
+        };
 
         const fullscreenView = document.querySelector("#fullscreenview");
 

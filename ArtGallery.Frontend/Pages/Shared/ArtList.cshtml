@@ -9,10 +9,12 @@
                 <article
                     id="@art.JumpHash"
                     class="artitem"
-                    data-artitem="@JsonConvert.SerializeObject(art, new JsonSerializerSettings() {
-                                      ContractResolver = new CamelCasePropertyNamesContractResolver(),
-                                      NullValueHandling = NullValueHandling.Ignore,
-                                  })">
+                    data-fullimage="@art.Path"
+                    data-title="@art.Title"
+                    data-description="@art.Description"
+                    data-artistname="@art.ArtistName"
+                    data-ispixel="@(art.IsPixel ? "true" : "false")"
+                    >
                     <figure>
                         <a class="artitemAnchor" href="@art.Path">
                             <picture>
